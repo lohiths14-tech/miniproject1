@@ -1,0 +1,340 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics - AI Grading System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-chart-line"></i> Analytics Dashboard</h2>
+                <a href="/lecturer-dashboard" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Key Metrics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>3</h4>
+                            <p class="mb-0">Total Students</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>3</h4>
+                            <p class="mb-0">Active Assignments</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-tasks fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>24</h4>
+                            <p class="mb-0">Total Submissions</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-file-code fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>62%</h4>
+                            <p class="mb-0">Average Score</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-chart-bar fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Charts Section -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-line-chart"></i> Student Performance Trends</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="performanceChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-pie-chart"></i> Grade Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="gradeChart" width="300" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Detailed Analytics -->
+    <div class="row mt-4">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-language"></i> Programming Language Usage</h5>
+                </div>
+                <div class="card-body">
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-primary" style="width: 45%">Python (45%)</div>
+                    </div>
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-warning" style="width: 30%">Java (30%)</div>
+                    </div>
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-danger" style="width: 20%">C++ (20%)</div>
+                    </div>
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-success" style="width: 5%">JavaScript (5%)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-clock"></i> Submission Timeline</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>On Time</span>
+                        <span class="text-success">18 (75%)</span>
+                    </div>
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-success" style="width: 75%"></div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Late Submissions</span>
+                        <span class="text-warning">4 (17%)</span>
+                    </div>
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-warning" style="width: 17%"></div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Not Submitted</span>
+                        <span class="text-danger">2 (8%)</span>
+                    </div>
+                    <div class="progress mb-3">
+                        <div class="progress-bar bg-danger" style="width: 8%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Top Performers -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-trophy"></i> Top Performers</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded">
+                                <i class="fas fa-medal text-warning fa-3x mb-2"></i>
+                                <h5>John Doe</h5>
+                                <p class="text-muted">CS001</p>
+                                <h4 class="text-success">85%</h4>
+                                <small>12 submissions</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded">
+                                <i class="fas fa-medal text-secondary fa-3x mb-2"></i>
+                                <h5>Jane Smith</h5>
+                                <p class="text-muted">CS002</p>
+                                <h4 class="text-warning">65%</h4>
+                                <small>8 submissions</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center p-3 border rounded">
+                                <i class="fas fa-medal text-danger fa-3x mb-2"></i>
+                                <h5>Mike Johnson</h5>
+                                <p class="text-muted">CS003</p>
+                                <h4 class="text-danger">35%</h4>
+                                <small>4 submissions</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Export Controls -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-download"></i> Export Analytics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button class="btn btn-primary w-100 mb-2" onclick="exportReport('pdf')">
+                                <i class="fas fa-file-pdf"></i> Export as PDF Report
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button class="btn btn-success w-100 mb-2" onclick="exportReport('excel')">
+                                <i class="fas fa-file-excel"></i> Export as Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Initialize charts when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCharts();
+});
+
+function initializeCharts() {
+    // Performance Trend Chart (simulated)
+    const ctx1 = document.getElementById('performanceChart').getContext('2d');
+    showAlert('Analytics charts loaded successfully!', 'success');
+    
+    // Display simulated chart message
+    ctx1.fillStyle = '#e9ecef';
+    ctx1.fillRect(0, 0, 800, 200);
+    ctx1.fillStyle = '#495057';
+    ctx1.font = '16px Arial';
+    ctx1.textAlign = 'center';
+    ctx1.fillText('Student Performance Trends Chart', 400, 80);
+    ctx1.fillText('(Chart would show performance over time)', 400, 110);
+    ctx1.fillText('Data: Week 1: 45%, Week 2: 62%, Week 3: 68%, Week 4: 75%', 400, 140);
+    
+    // Grade Distribution Chart (simulated)
+    const ctx2 = document.getElementById('gradeChart').getContext('2d');
+    ctx2.fillStyle = '#e9ecef';
+    ctx2.fillRect(0, 0, 300, 200);
+    ctx2.fillStyle = '#495057';
+    ctx2.font = '14px Arial';
+    ctx2.textAlign = 'center';
+    ctx2.fillText('Grade Distribution', 150, 80);
+    ctx2.fillText('A: 33% (1 student)', 150, 100);
+    ctx2.fillText('B: 33% (1 student)', 150, 120);
+    ctx2.fillText('D: 33% (1 student)', 150, 140);
+    ctx2.fillText('F: 0% (0 students)', 150, 160);
+}
+
+function exportReport(format) {
+    showAlert(`Generating ${format.toUpperCase()} analytics report...`, 'info');
+    
+    setTimeout(function() {
+        const reportData = `Analytics Report (${format.toUpperCase()})
+==============================
+Generated: ${new Date().toLocaleString()}
+
+KEY METRICS:
+- Total Students: 3
+- Active Assignments: 3
+- Total Submissions: 24
+- Average Score: 62%
+
+PERFORMANCE BREAKDOWN:
+- Grade A: 1 student (33%) - John Doe (85%)
+- Grade B: 1 student (33%) - Jane Smith (65%)
+- Grade C: 0 students (0%)
+- Grade D: 1 student (33%) - Mike Johnson (35%)
+- Grade F: 0 students (0%)
+
+PROGRAMMING LANGUAGES:
+- Python: 45% usage
+- Java: 30% usage
+- C++: 20% usage
+- JavaScript: 5% usage
+
+SUBMISSION TIMELINE:
+- On Time: 18 submissions (75%)
+- Late: 4 submissions (17%)
+- Not Submitted: 2 assignments (8%)
+
+TOP PERFORMERS:
+1. John Doe (CS001) - 85% average, 12 submissions
+2. Jane Smith (CS002) - 65% average, 8 submissions
+3. Mike Johnson (CS003) - 35% average, 4 submissions
+
+RECOMMENDATIONS:
+- Consider additional support for Mike Johnson
+- Python remains the most popular language
+- Submission rates are good (92% completion)
+
+Generated by AI Grading System Analytics`;
+        
+        const blob = new Blob([reportData], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `analytics_report.${format === 'pdf' ? 'txt' : 'txt'}`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        
+        showAlert(`${format.toUpperCase()} report exported successfully!`, 'success');
+    }, 2000);
+}
+
+// Function to show alerts
+function showAlert(message, type = 'info') {
+    const alertHtml = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            <i class="fas fa-info-circle"></i> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    $('.container').prepend(alertHtml);
+    
+    setTimeout(function() {
+        $('.alert:first').fadeOut(function() {
+            $(this).remove();
+        });
+    }, 3000);
+}
+</script>
+{% endblock %}

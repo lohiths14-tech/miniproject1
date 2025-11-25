@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineering Lab Assignments - AI Grading System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .lab-card { background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; transition: transform 0.3s ease; }
+        .lab-card:hover { transform: translateY(-5px); }
+        .difficulty-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; }
+        .difficulty-1, .difficulty-2 { background: #d4edda; color: #155724; }
+        .difficulty-3, .difficulty-4 { background: #fff3cd; color: #856404; }
+        .difficulty-5 { background: #f8d7da; color: #721c24; }
+        .lab-type-algorithms { border-left: 4px solid #007bff; }
+        .lab-type-data_structures { border-left: 4px solid #28a745; }
+        .lab-type-systems_programming { border-left: 4px solid #dc3545; }
+        .code-editor { width: 100%; height: 300px; font-family: monospace; background: #1e1e1e; color: #d4d4d4; padding: 15px; border: none; resize: vertical; }
+        .feedback-panel { background: #f8f9fa; border-radius: 10px; padding: 20px; margin-top: 20px; }
+        .score-display { font-size: 2rem; font-weight: bold; color: #28a745; }
+        .quick-feedback { background: #e7f3ff; border-left: 4px solid #007bff; padding: 15px; margin: 10px 0; }
+        .suggestion-item { background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; margin: 5px 0; }
+        .achievement-notification { position: fixed; top: 20px; right: 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 10px; z-index: 1000; }
+    </style>
+</head>
+<body>
+    {% extends "base.html" %}
+    
+    {% block content %}
+    <div class="container-fluid py-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2>🔧 Engineering Lab Assignments</h2>
+                <p class="text-muted">Automated grading with instant feedback for curriculum exercises</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Available Assignments -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">📚 Available Lab Assignments</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="assignments-list">
+                            <!-- Assignments will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Assignment Workspace -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0" id="current-assignment-title">Select an Assignment</h5>
+                        <div>
+                            <button class="btn btn-outline-primary btn-sm" onclick="getQuickFeedback()">
+                                <i class="fas fa-lightbulb"></i> Quick Feedback
+                            </button>
+                            <button class="btn btn-success btn-sm" onclick="submitAssignment()">
+                                <i class="fas fa-paper-plane"></i> Submit
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="assignment-details" class="mb-3" style="display: none;">
+                            <div class="alert alert-info">
+                                <strong>Objectives:</strong>
+                                <ul id="learning-objectives" class="mb-0"></ul>
+                            </div>
+                        </div>
+                        
+                        <textarea class="code-editor" id="code-input" placeholder="Write your solution here...">
+# Example: Implement a sorting algorithm
+def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        for j in range(0, n-i-1):
+            if arr[j] > arr[j+1]:
+                arr[j], arr[j+1] = arr[j+1], arr[j]
+    return arr
+
+# Test your implementation
+test_array = [64, 34, 25, 12, 22, 11, 90]
+result = bubble_sort(test_array.copy())
+print(result)</textarea>
+                        
+                        <!-- Quick Feedback Panel -->
+                        <div id="quick-feedback-panel" style="display: none;"></div>
+                        
+                        <!-- Detailed Feedback Panel -->
+                        <div id="detailed-feedback-panel" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Achievement Notification -->
+    <div id="achievement-notification" class="achievement-notification" style="display: none;">
+        <div class="d-flex align-items-center">
+            <div class="fs-3 me-2">🏆</div>
+            <div>
+                <div class="fw-bold">Achievement Unlocked!</div>
+                <div id="achievement-desc">Lab completed successfully!</div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    
+    {% block scripts %}
+    <script>
+        class LabAssignmentSystem {
+            constructor() {
+                this.currentAssignment = null;
+                this.init();
+            }
+            
+            async init() {
+                await this.loadAssignments();
+                this.setupEventListeners();
+            }
+            
+            async loadAssignments() {
+                try {
+                    const response = await fetch('/api/lab-assignments/assignments');
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        this.renderAssignments(result.data);
+                    }
+                } catch (error) {
+                    console.error('Error loading assignments:', error);
+                    this.renderSampleAssignments();
+                }
+            }
+            
+            renderAssignments(assignments) {
+                const container = document.getElementById('assignments-list');
+                container.innerHTML = '';
+                
+                assignments.forEach(assignment => {
+                    const card = document.createElement('div');
+                    card.className = `lab-card lab-type-${assignment.lab_type} p-3`;
+                    card.innerHTML = `
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="mb-0">${assignment.title}</h6>
+                            <span class="difficulty-badge difficulty-${assignment.difficulty}">
+                                Level ${assignment.difficulty}
+                            </span>
+                        </div>
+                        <p class="text-muted small mb-2">${assignment.description}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small">
+                                <i class="fas fa-clock"></i> ${assignment.estimated_time} min
+                            </span>
+                            <button class="btn btn-primary btn-sm" onclick="selectAssignment('${assignment.assignment_id}')">
+                                Start Lab
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+            
+            renderSampleAssignments() {
+                const sampleAssignments = [
+                    {
+                        assignment_id: 'algo_sorting_001',
+                        title: 'Sorting Algorithms',
+                        lab_type: 'algorithms',
+                        difficulty: 2,
+                        estimated_time: 45,
+                        description: 'Implement efficient sorting algorithm with complexity analysis'
+                    },
+                    {
+                        assignment_id: 'ds_linkedlist_001',
+                        title: 'Linked List Operations',
+                        lab_type: 'data_structures',
+                        difficulty: 3,
+                        estimated_time: 60,
+                        description: 'Create linked list with CRUD operations and memory management'
+                    },
+                    {
+                        assignment_id: 'sys_fileio_001',
+                        title: 'File System Operations',
+                        lab_type: 'systems_programming',
+                        difficulty: 4,
+                        estimated_time: 90,
+                        description: 'Implement file operations with proper error handling'
+                    }
+                ];
+                
+                this.renderAssignments(sampleAssignments);
+            }
+            
+            async selectAssignment(assignmentId) {
+                try {
+                    const response = await fetch(`/api/lab-assignments/assignment/${assignmentId}`);
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        this.currentAssignment = result.data;
+                        this.displayAssignmentDetails();
+                    }
+                } catch (error) {
+                    console.error('Error loading assignment details:', error);
+                }
+            }
+            
+            displayAssignmentDetails() {
+                if (!this.currentAssignment) return;
+                
+                document.getElementById('current-assignment-title').textContent = this.currentAssignment.title;
+                document.getElementById('assignment-details').style.display = 'block';
+                
+                const objectivesList = document.getElementById('learning-objectives');
+                objectivesList.innerHTML = '';
+                this.currentAssignment.learning_objectives.forEach(objective => {
+                    const li = document.createElement('li');
+                    li.textContent = objective;
+                    objectivesList.appendChild(li);
+                });
+            }
+            
+            async getQuickFeedback() {
+                const code = document.getElementById('code-input').value;
+                
+                if (!code.trim()) {
+                    alert('Please write some code first!');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/api/lab-assignments/quick-feedback', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ code, language: 'python' })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        this.displayQuickFeedback(result.data);
+                    }
+                } catch (error) {
+                    console.error('Error getting quick feedback:', error);
+                }
+            }
+            
+            displayQuickFeedback(feedback) {
+                const panel = document.getElementById('quick-feedback-panel');
+                panel.style.display = 'block';
+                panel.innerHTML = `
+                    <div class="quick-feedback">
+                        <h6>⚡ Quick Analysis</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Complexity:</strong> ${feedback.complexity_level}<br>
+                                <strong>Time Complexity:</strong> ${feedback.time_complexity}
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Code Quality:</strong> ${feedback.code_quality_score}/100
+                            </div>
+                        </div>
+                        ${feedback.suggestions.length > 0 ? `
+                            <div class="mt-2">
+                                <strong>Quick Suggestions:</strong>
+                                ${feedback.suggestions.map(s => `<div class="suggestion-item">${s}</div>`).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+            
+            async submitAssignment() {
+                const code = document.getElementById('code-input').value;
+                
+                if (!code.trim()) {
+                    alert('Please write some code before submitting!');
+                    return;
+                }
+                
+                if (!this.currentAssignment) {
+                    alert('Please select an assignment first!');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/api/lab-assignments/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            code,
+                            assignment_id: this.currentAssignment.assignment_id,
+                            language: 'python'
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        this.displayDetailedFeedback(result.data);
+                        this.showAchievementNotification(result.data);
+                    }
+                } catch (error) {
+                    console.error('Error submitting assignment:', error);
+                }
+            }
+            
+            displayDetailedFeedback(submissionData) {
+                const feedback = submissionData.feedback;
+                const panel = document.getElementById('detailed-feedback-panel');
+                panel.style.display = 'block';
+                panel.innerHTML = `
+                    <div class="feedback-panel">
+                        <div class="row mb-3">
+                            <div class="col-md-4 text-center">
+                                <div class="score-display">${feedback.overall_score}/${this.currentAssignment.max_score}</div>
+                                <small class="text-muted">Overall Score</small>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="score-display">${Math.round(feedback.grade_percentage)}%</div>
+                                <small class="text-muted">Grade</small>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="score-display">${feedback.execution_results.passed}/${feedback.execution_results.total}</div>
+                                <small class="text-muted">Tests Passed</small>
+                            </div>
+                        </div>
+                        
+                        ${feedback.commendations.length > 0 ? `
+                            <div class="mb-3">
+                                <h6 class="text-success">✅ Well Done!</h6>
+                                ${feedback.commendations.map(c => `<div class="alert alert-success py-2">${c}</div>`).join('')}
+                            </div>
+                        ` : ''}
+                        
+                        ${feedback.improvement_suggestions.length > 0 ? `
+                            <div class="mb-3">
+                                <h6 class="text-warning">💡 Suggestions for Improvement</h6>
+                                ${feedback.improvement_suggestions.map(s => `<div class="suggestion-item">${s}</div>`).join('')}
+                            </div>
+                        ` : ''}
+                        
+                        <div class="mb-3">
+                            <h6>🔍 Test Results</h6>
+                            ${feedback.execution_results.details.map(test => `
+                                <div class="d-flex justify-content-between align-items-center p-2 border-bottom">
+                                    <span>Test ${test.test}</span>
+                                    <span class="${test.passed ? 'text-success' : 'text-danger'}">
+                                        ${test.passed ? '✅ Passed' : '❌ Failed'}
+                                    </span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            showAchievementNotification(submissionData) {
+                if (submissionData.gamification && submissionData.gamification.new_badges) {
+                    const notification = document.getElementById('achievement-notification');
+                    notification.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        notification.style.display = 'none';
+                    }, 5000);
+                }
+            }
+            
+            setupEventListeners() {
+                // Setup any additional event listeners
+            }
+        }
+        
+        // Global functions
+        function selectAssignment(assignmentId) {
+            labSystem.selectAssignment(assignmentId);
+        }
+        
+        function getQuickFeedback() {
+            labSystem.getQuickFeedback();
+        }
+        
+        function submitAssignment() {
+            labSystem.submitAssignment();
+        }
+        
+        // Initialize system
+        let labSystem;
+        document.addEventListener('DOMContentLoaded', () => {
+            labSystem = new LabAssignmentSystem();
+        });
+    </script>
+    {% endblock %}
+</body>
+</html>

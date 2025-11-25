@@ -1,0 +1,137 @@
+{
+    "en": {
+        "common": {
+            "submit": "Submit",
+            "cancel": "Cancel",
+            "save": "Save",
+            "delete": "Delete",
+            "edit": "Edit",
+            "loading": "Loading...",
+            "error": "Error",
+            "success": "Success",
+            "search": "Search",
+            "filter": "Filter"
+        },
+        "navigation": {
+            "dashboard": "Dashboard",
+            "assignments": "Assignments",
+            "submissions": "Submissions",
+            "plagiarism": "Plagiarism Detection",
+            "analytics": "Analytics",
+            "settings": "Settings",
+            "logout": "Logout"
+        },
+        "student": {
+            "myAssignments": "My Assignments",
+            "submitCode": "Submit Code",
+            "viewGrades": "View Grades",
+            "leaderboard": "Leaderboard",
+            "mySubmissions": "My Submissions"
+        },
+        "lecturer": {
+            "createAssignment": "Create Assignment",
+            "viewSubmissions": "View Submissions",
+            "gradeSubmissions": "Grade Submissions",
+            "analytics": "Class Analytics",
+            "manageCourse": "Manage Course"
+        },
+        "grading": {
+            "score": "Score",
+            "feedback": "Feedback",
+            "testResults": "Test Results",
+            "codeQuality": "Code Quality",
+            "efficiency": "Efficiency",
+            "correctness": "Correctness"
+        },
+        "plagiarism": {
+            "scanForPlagiarism": "Scan for Plagiarism",
+            "similarityScore": "Similarity Score",
+            "noPlagiarism": "No plagiarism detected",
+            "potentialMatch": "Potential plagiarism match",
+            "viewComparison": "View Comparison"
+        }
+    },
+    "es": {
+        "common": {
+            "submit": "Enviar",
+            "cancel": "Cancelar",
+            "save": "Guardar",
+            "delete": "Eliminar",
+            "edit": "Editar",
+            "loading": "Cargando...",
+            "error": "Error",
+            "success": "Éxito",
+            "search": "Buscar",
+            "filter": "Filtrar"
+        },
+        "navigation": {
+            "dashboard": "Panel",
+            "assignments": "Tareas",
+            "submissions": "Envíos",
+            "plagiarism": "Detección de Plagio",
+            "analytics": "Analíticas",
+            "settings": "Configuración",
+            "logout": "Cerrar Sesión"
+        },
+        "student": {
+            "myAssignments": "Mis Tareas",
+            "submitCode": "Enviar Código",
+            "viewGrades": "Ver Calificaciones",
+            "leaderboard": "Tabla de Clasificación",
+            "mySubmissions": "Mis Envíos"
+        },
+        "lecturer": {
+            "createAssignment": "Crear Tarea",
+            "viewSubmissions": "Ver Envíos",
+            "gradeSubmissions": "Calificar Envíos",
+            "analytics": "Analíticas de Clase",
+            "manageCourse": "Administrar Curso"
+        }
+    },
+    "fr": {
+        "common": {
+            "submit": "Soumettre",
+            "cancel": "Annuler",
+            "save": "Enregistrer",
+            "delete": "Supprimer",
+            "edit": "Modifier",
+            "loading": "Chargement...",
+            "error": "Erreur",
+            "success": "Succès",
+            "search": "Rechercher",
+            "filter": "Filtrer"
+        },
+        "navigation": {
+            "dashboard": "Tableau de Bord",
+            "assignments": "Devoirs",
+            "submissions": "Soumissions",
+            "plagiarism": "Détection de Plagiat",
+            "analytics": "Analytiques",
+            "settings": "Paramètres",
+            "logout": "Déconnexion"
+        }
+    },
+    "zh": {
+        "common": {
+            "submit": "提交",
+            "cancel": "取消",
+            "save": "保存",
+            "delete": "删除",
+            "edit": "编辑",
+            "loading": "加载中...",
+            "error": "错误",
+            "success": "成功",
+            "search": "搜索",
+            "filter": "筛选"
+        },
+        "navigation": {
+            "dashboard": "仪表板",
+            "assignments": "作业",
+            "submissions": "提交",
+            "plagiarism": "抄袭检测",
+            "analytics": "分析",
+            "settings": "设置",
+            "logout": "登出"
+        }
+    }
+}

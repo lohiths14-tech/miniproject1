@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}Lecturer Dashboard - AI Grading System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-success">
+                <h4><i class="fas fa-check-circle"></i> Welcome to Lecturer Dashboard!</h4>
+                <p class="mb-0">Login successful! You are now logged in as a lecturer.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5><i class="fas fa-chalkboard-teacher"></i> Lecturer Overview</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Management Tools:</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="list-group">
+                                <a href="/create-assignment" class="list-group-item list-group-item-action">
+                                    <i class="fas fa-plus"></i> Create Assignment
+                                </a>
+                                <a href="/manage-assignments" class="list-group-item list-group-item-action">
+                                    <i class="fas fa-tasks"></i> Manage Assignments
+                                </a>
+                                <a href="/view-students" class="list-group-item list-group-item-action">
+                                    <i class="fas fa-users"></i> View Students
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="list-group">
+                                <a href="/analytics" class="list-group-item list-group-item-action">
+                                    <i class="fas fa-chart-line"></i> Analytics
+                                </a>
+                                <a href="/leaderboard" class="list-group-item list-group-item-action">
+                                    <i class="fas fa-trophy"></i> Leaderboard
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action" onclick="exportData()">
+                                    <i class="fas fa-file-export"></i> Export Data
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h6><i class="fas fa-info-circle"></i> System Status</h6>
+                </div>
+                <div class="card-body">
+                    <p class="text-success"><i class="fas fa-check"></i> Authentication: Working</p>
+                    <p class="text-info"><i class="fas fa-cog"></i> AI Grading: Ready</p>
+                    <p class="text-warning"><i class="fas fa-database"></i> Database: In-Memory</p>
+                    <p class="text-success"><i class="fas fa-shield-alt"></i> Plagiarism Check: Active</p>
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <div class="card-header bg-secondary text-white">
+                    <h6><i class="fas fa-user"></i> User Info</h6>
+                </div>
+                <div class="card-body">
+                    <p><strong>Role:</strong> Lecturer</p>
+                    <p><strong>Status:</strong> <span class="text-success">Active</span></p>
+                    <p><strong>Login:</strong> <span id="currentTime"></span></p>
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <div class="card-header bg-primary text-white">
+                    <h6><i class="fas fa-chart-bar"></i> Quick Stats</h6>
+                </div>
+                <div class="card-body">
+                    <p><strong>Total Students:</strong> <span id="totalStudents">0</span></p>
+                    <p><strong>Active Assignments:</strong> <span id="activeAssignments">0</span></p>
+                    <p><strong>Pending Reviews:</strong> <span id="pendingReviews">0</span></p>
+                    <p><strong>Class Average:</strong> <span id="avgScore">0%</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('currentTime').textContent = new Date().toLocaleString();
+
+// Load real dashboard stats
+async function loadDashboardStats() {
+    try {
+        const response = await fetch('/api/dashboard/lecturer/stats');
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            const stats = data.data;
+            document.getElementById('totalStudents').textContent = stats.total_students;
+            document.getElementById('activeAssignments').textContent = stats.active_assignments;
+            document.getElementById('pendingReviews').textContent = stats.pending_reviews;
+            document.getElementById('avgScore').textContent = stats.average_class_score + '%';
+        }
+    } catch (error) {
+        console.error('Error loading stats:', error);
+    }
+}
+
+// Load stats when page loads
+loadDashboardStats();
+
+// Function to show alerts
+function showAlert(message, type = 'info') {
+    const alertHtml = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            <i class="fas fa-info-circle"></i> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    // Add alert to the top of the container
+    $('.container').prepend(alertHtml);
+    
+    // Auto-hide after 3 seconds
+    setTimeout(function() {
+        $('.alert:first').fadeOut(function() {
+            $(this).remove();
+        });
+    }, 3000);
+}
+
+// Function to export data
+function exportData() {
+    showAlert('Generating lecturer data export...', 'success');
+    
+    // Simulate data export
+    setTimeout(function() {
+        const exportData = `Lecturer Dashboard Export
+========================
+Export Date: ${new Date().toLocaleString()}
+Role: Lecturer
+Status: Active
+
+System Statistics:
+- Total Students: 2
+- Active Assignments: 0
+- Pending Reviews: 0
+- Total Submissions: 0
+
+System Status:
+- Authentication: Working
+- AI Grading: Ready
+- Database: In-Memory
+- Plagiarism Check: Active
+
+Management Tools Available:
+- Create Assignment
+- Manage Assignments
+- View Students
+- Analytics
+- Leaderboard
+- Export Data
+
+Generated by AI Grading System`;
+        
+        // Create and download file
+        const blob = new Blob([exportData], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'lecturer_data_export.txt';
+        a.click();
+        window.URL.revokeObjectURL(url);
+        
+        showAlert('Data exported successfully!', 'success');
+    }, 1500);
+}
+</script>
+{% endblock %}

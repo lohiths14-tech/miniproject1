@@ -1,0 +1,26 @@
+# Secure Code Execution Sandbox
+FROM python:3.11-slim
+
+WORKDIR /sandbox
+
+# Install compilers with minimal tools
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    openjdk-17-jdk-headless \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user for code execution
+RUN useradd -m -u 1000 sandbox && \
+    chown -R sandbox:sandbox /sandbox
+
+# Switch to non-root user
+USER sandbox
+
+# Set resource limits in environment
+ENV PYTHONUNBUFFERED=1
+ENV MAX_EXECUTION_TIME=10
+ENV MAX_MEMORY_MB=256
+
+# This container will receive code via API and execute it
+CMD ["python", "-u", "-c", "print('Sandbox ready')"]

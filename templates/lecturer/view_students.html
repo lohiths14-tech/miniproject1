@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+{% block title %}View Students - AI Grading System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-users"></i> View Students</h2>
+                <a href="/lecturer-dashboard" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5><i class="fas fa-graduation-cap"></i> Student Management</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <button class="btn btn-primary" onclick="exportStudentList()">
+                                <i class="fas fa-download"></i> Export List
+                            </button>
+                            <button class="btn btn-success" onclick="sendBulkEmail()">
+                                <i class="fas fa-envelope"></i> Send Email
+                            </button>
+                        </div>
+                        <div class="input-group" style="width: 300px;">
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search students..." onkeyup="searchStudents()">
+                            <button class="btn btn-outline-secondary" onclick="searchStudents()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Student List -->
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+                                    </th>
+                                    <th>Student Details</th>
+                                    <th>USN</th>
+                                    <th>Performance</th>
+                                    <th>Submissions</th>
+                                    <th>Last Activity</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsList">
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="student-checkbox" value="1">
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar bg-primary text-white rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <div>
+                                                <strong>John Doe</strong><br>
+                                                <small class="text-muted">john.doe@example.com</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><code>CS001</code></td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar bg-success" style="width: 85%">85%</div>
+                                        </div>
+                                        <small class="text-muted">Grade: A</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">12</span> total<br>
+                                        <small class="text-success">8 passed</small>
+                                    </td>
+                                    <td>
+                                        <small>2025-09-26</small><br>
+                                        <small class="text-muted">2 hours ago</small>
+                                    </td>
+                                    <td><span class="badge bg-success">Active</span></td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-sm btn-outline-primary" onclick="viewStudent(1)">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-info" onclick="sendEmail(1)">
+                                                <i class="fas fa-envelope"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-warning" onclick="resetPassword(1)">
+                                                <i class="fas fa-key"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="student-checkbox" value="2">
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar bg-info text-white rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <div>
+                                                <strong>Jane Smith</strong><br>
+                                                <small class="text-muted">jane.smith@example.com</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><code>CS002</code></td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar bg-warning" style="width: 65%">65%</div>
+                                        </div>
+                                        <small class="text-muted">Grade: B</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">8</span> total<br>
+                                        <small class="text-success">5 passed</small>
+                                    </td>
+                                    <td>
+                                        <small>2025-09-25</small><br>
+                                        <small class="text-muted">1 day ago</small>
+                                    </td>
+                                    <td><span class="badge bg-success">Active</span></td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-sm btn-outline-primary" onclick="viewStudent(2)">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-info" onclick="sendEmail(2)">
+                                                <i class="fas fa-envelope"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-warning" onclick="resetPassword(2)">
+                                                <i class="fas fa-key"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="student-checkbox" value="3">
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar bg-warning text-white rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <div>
+                                                <strong>Mike Johnson</strong><br>
+                                                <small class="text-muted">mike.johnson@example.com</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><code>CS003</code></td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar bg-danger" style="width: 35%">35%</div>
+                                        </div>
+                                        <small class="text-muted">Grade: D</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">4</span> total<br>
+                                        <small class="text-danger">1 passed</small>
+                                    </td>
+                                    <td>
+                                        <small>2025-09-23</small><br>
+                                        <small class="text-muted">3 days ago</small>
+                                    </td>
+                                    <td><span class="badge bg-warning">Inactive</span></td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-sm btn-outline-primary" onclick="viewStudent(3)">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-info" onclick="sendEmail(3)">
+                                                <i class="fas fa-envelope"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-warning" onclick="resetPassword(3)">
+                                                <i class="fas fa-key"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Student Statistics -->
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h4>3</h4>
+                    <p>Total Students</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h4>2</h4>
+                    <p>Active Students</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h4>62%</h4>
+                    <p>Average Score</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h4>24</h4>
+                    <p>Total Submissions</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function exportStudentList() {
+    showAlert('Exporting student list...', 'info');
+    
+    setTimeout(function() {
+        const studentData = `Student List Export
+===================
+Export Date: ${new Date().toLocaleString()}
+
+Total Students: 3
+Active Students: 2
+Average Performance: 62%
+
+Student Details:
+1. John Doe (CS001) - john.doe@example.com - Grade: A (85%)
+2. Jane Smith (CS002) - jane.smith@example.com - Grade: B (65%)  
+3. Mike Johnson (CS003) - mike.johnson@example.com - Grade: D (35%)
+
+Generated by AI Grading System`;
+        
+        const blob = new Blob([studentData], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'student_list_export.txt';
+        a.click();
+        window.URL.revokeObjectURL(url);
+        
+        showAlert('Student list exported successfully!', 'success');
+    }, 1500);
+}
+
+function sendBulkEmail() {
+    const selected = document.querySelectorAll('.student-checkbox:checked');
+    if (selected.length === 0) {
+        showAlert('Please select students to send email to', 'warning');
+        return;
+    }
+    showAlert(`Sending email to ${selected.length} selected students...`, 'info');
+    setTimeout(() => {
+        showAlert('Bulk email sent successfully!', 'success');
+    }, 2000);
+}
+
+function searchStudents() {
+    const searchTerm = document.getElementById('searchInput').value;
+    if (searchTerm) {
+        showAlert(`Searching for: "${searchTerm}"`, 'info');
+    }
+}
+
+function toggleSelectAll() {
+    const selectAll = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.student-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+    });
+}
+
+function viewStudent(id) {
+    showAlert(`Viewing detailed profile for student ${id}...`, 'info');
+}
+
+function sendEmail(id) {
+    showAlert(`Sending email to student ${id}...`, 'info');
+    setTimeout(() => {
+        showAlert('Email sent successfully!', 'success');
+    }, 1500);
+}
+
+function resetPassword(id) {
+    if (confirm('Are you sure you want to reset this student\'s password?')) {
+        showAlert(`Password reset for student ${id}. New password sent via email.`, 'success');
+    }
+}
+
+// Function to show alerts
+function showAlert(message, type = 'info') {
+    const alertHtml = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            <i class="fas fa-info-circle"></i> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    $('.container').prepend(alertHtml);
+    
+    setTimeout(function() {
+        $('.alert:first').fadeOut(function() {
+            $(this).remove();
+        });
+    }, 3000);
+}
+</script>
+{% endblock %}

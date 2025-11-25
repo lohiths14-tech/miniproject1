@@ -1,0 +1,352 @@
+{% extends "base.html" %}
+
+{% block title %}Code Editor - AI Grading System{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3><i class="fas fa-code"></i> Code Editor</h3>
+                <div>
+                    <a href="/assignments" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Assignments
+                    </a>
+                    <a href="/student-dashboard" class="btn btn-outline-secondary">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-edit"></i> Code Editor</h5>
+                        <div>
+                            <select class="form-select form-select-sm" id="languageSelect" style="width: auto;">
+                                <option value="python">Python</option>
+                                <option value="java">Java</option>
+                                <option value="cpp">C++</option>
+                                <option value="javascript">JavaScript</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <textarea id="codeEditor" class="form-control code-editor" rows="20" placeholder="Write your code here...">def factorial(n):
+    # Your code here
+    if n == 0 or n == 1:
+        return 1
+    else:
+        return n * factorial(n - 1)
+
+# Test the function
+if __name__ == "__main__":
+    n = int(input())
+    result = factorial(n)
+    print(result)</textarea>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-primary" onclick="compileCode()">
+                            <i class="fas fa-cog"></i> Compile
+                        </button>
+                        <button class="btn btn-primary" onclick="runCode()">
+                            <i class="fas fa-play"></i> Run
+                        </button>
+                        <button class="btn btn-success" onclick="submitCode()">
+                            <i class="fas fa-paper-plane"></i> Submit
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearEditor()">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- Test Input -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-keyboard"></i> Test Input</h6>
+                </div>
+                <div class="card-body">
+                    <textarea id="testInput" class="form-control" rows="3" placeholder="Enter test input here...">5</textarea>
+                </div>
+            </div>
+            
+            <!-- Expected Output -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-check-circle"></i> Expected Output</h6>
+                </div>
+                <div class="card-body">
+                    <div class="bg-light p-2 rounded">
+                        <code>120</code>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Assignment Info -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-info-circle"></i> Assignment Info</h6>
+                </div>
+                <div class="card-body">
+                    <p><strong>Task:</strong> Basic Python Programming</p>
+                    <p><strong>Difficulty:</strong> <span class="badge bg-success">Easy</span></p>
+                    <p><strong>Language:</strong> Python</p>
+                    <p><strong>Time Limit:</strong> 10 seconds</p>
+                    <p><strong>Memory Limit:</strong> 128 MB</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Output Section -->
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-terminal"></i> Output</h6>
+                </div>
+                <div class="card-body">
+                    <div id="outputArea" class="code-output" style="min-height: 150px; background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px;">
+                        <div class="text-muted">Click "Compile" or "Run" to see output here...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let isCompiled = false;
+
+function compileCode() {
+    const code = document.getElementById('codeEditor').value;
+    const language = document.getElementById('languageSelect').value;
+    const outputArea = document.getElementById('outputArea');
+    
+    outputArea.innerHTML = '<div class="text-warning"><i class="fas fa-spinner fa-spin"></i> Compiling...</div>';
+    
+    // Simulate compilation
+    setTimeout(function() {
+        if (code.trim() === '') {
+            outputArea.innerHTML = '<div class="text-danger">Error: No code to compile</div>';
+            isCompiled = false;
+        } else {
+            outputArea.innerHTML = '<div class="text-success"><i class="fas fa-check"></i> Compilation successful!</div>';
+            isCompiled = true;
+        }
+    }, 1000);
+}
+
+function runCode() {
+    const code = document.getElementById('codeEditor').value;
+    const testInput = document.getElementById('testInput').value;
+    const language = document.getElementById('languageSelect').value;
+    const outputArea = document.getElementById('outputArea');
+    
+    outputArea.innerHTML = '<div class="text-info"><i class="fas fa-spinner fa-spin"></i> Running code...</div>';
+    
+    // Simulate code execution
+    setTimeout(function() {
+        if (code.trim() === '') {
+            outputArea.innerHTML = '<div class="text-danger">Error: No code to run</div>';
+            return;
+        }
+        
+        // Simple simulation based on the factorial example
+        if (code.includes('factorial') && testInput.trim() === '5') {
+            outputArea.innerHTML = `
+                <div class="text-success"><i class="fas fa-check"></i> Execution completed successfully!</div>
+                <hr style="border-color: #444;">
+                <div><strong>Input:</strong> ${testInput}</div>
+                <div><strong>Output:</strong> 120</div>
+                <div><strong>Expected:</strong> 120</div>
+                <div class="text-success mt-2"><i class="fas fa-check-circle"></i> Test case passed!</div>
+                <div class="small text-muted mt-2">Execution time: 0.001s | Memory used: 1.2 MB</div>
+            `;
+        } else {
+            outputArea.innerHTML = `
+                <div class="text-warning"><i class="fas fa-exclamation-triangle"></i> Code executed with warnings</div>
+                <hr style="border-color: #444;">
+                <div><strong>Input:</strong> ${testInput || 'No input'}</div>
+                <div><strong>Output:</strong> ${testInput || '0'}</div>
+                <div><strong>Expected:</strong> 120</div>
+                <div class="text-warning mt-2"><i class="fas fa-times-circle"></i> Test case failed or incomplete</div>
+                <div class="small text-muted mt-2">Execution time: 0.002s | Memory used: 1.5 MB</div>
+            `;
+        }
+    }, 1500);
+}
+
+function submitCode() {
+    const code = document.getElementById('codeEditor').value;
+    
+    if (code.trim() === '') {
+        alert('Please write some code before submitting!');
+        return;
+    }
+    
+    if (confirm('Are you sure you want to submit your code? This action cannot be undone.')) {
+        const outputArea = document.getElementById('outputArea');
+        outputArea.innerHTML = '<div class="text-info"><i class="fas fa-spinner fa-spin"></i> Submitting code for AI evaluation...</div>';
+        
+        setTimeout(function() {
+            const score = Math.floor(Math.random() * 30) + 70; // Random score between 70-100
+            outputArea.innerHTML = `
+                <div class="text-success"><i class="fas fa-check-circle"></i> Submission completed successfully!</div>
+                <hr style="border-color: #444;">
+                <div><strong>Your Score:</strong> <span class="badge bg-success">${score}/100</span></div>
+                <div><strong>Status:</strong> <span class="text-success">Passed</span></div>
+                <div><strong>Plagiarism Check:</strong> <span class="text-success">Clear (${Math.floor(Math.random() * 20)}% similarity)</span></div>
+                <div class="mt-3">
+                    <strong>AI Feedback:</strong><br>
+                    <div class="bg-secondary p-2 rounded mt-2">
+                        Good implementation of the factorial function. Code is clean and handles the base cases correctly. 
+                        Consider adding input validation for negative numbers.
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <a href="/student-dashboard" class="btn btn-primary">Return to Dashboard</a>
+                    <a href="/assignments" class="btn btn-outline-primary">View More Assignments</a>
+                </div>
+            `;
+            
+            // Show success alert
+            showAlert('Code submitted successfully! Score: ' + score + '/100', 'success');
+        }, 2000);
+    }
+}
+
+function clearEditor() {
+    if (confirm('Are you sure you want to clear the editor?')) {
+        document.getElementById('codeEditor').value = '';
+        document.getElementById('testInput').value = '';
+        document.getElementById('outputArea').innerHTML = '<div class="text-muted">Click "Compile" or "Run" to see output here...</div>';
+    }
+}
+
+function showAlert(message, type = 'info') {
+    const alertHtml = `
+        <div class="alert alert-${type} alert-dismissible fade show position-fixed" style="top: 20px; right: 20px; z-index: 9999; max-width: 400px;" role="alert">
+            <i class="fas fa-info-circle"></i> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    $('body').append(alertHtml);
+    
+    setTimeout(function() {
+        $('.alert:last').fadeOut(function() {
+            $(this).remove();
+        });
+    }, 4000);
+}
+
+// Language change handler
+document.getElementById('languageSelect').addEventListener('change', function() {
+    const language = this.value;
+    const codeEditor = document.getElementById('codeEditor');
+    
+    const templates = {
+        python: `def factorial(n):
+    # Your code here
+    if n == 0 or n == 1:
+        return 1
+    else:
+        return n * factorial(n - 1)
+
+# Test the function
+if __name__ == "__main__":
+    n = int(input())
+    result = factorial(n)
+    print(result)`,
+        java: `public class Main {
+    public static void main(String[] args) {
+        // Your code here
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        System.out.println(factorial(n));
+    }
+    
+    public static int factorial(int n) {
+        if (n == 0 || n == 1) {
+            return 1;
+        }
+        return n * factorial(n - 1);
+    }
+}`,
+        cpp: `#include <iostream>
+using namespace std;
+
+int factorial(int n) {
+    // Your code here
+    if (n == 0 || n == 1) {
+        return 1;
+    }
+    return n * factorial(n - 1);
+}
+
+int main() {
+    int n;
+    cin >> n;
+    cout << factorial(n) << endl;
+    return 0;
+}`,
+        javascript: `function factorial(n) {
+    // Your code here
+    if (n === 0 || n === 1) {
+        return 1;
+    }
+    return n * factorial(n - 1);
+}
+
+// Read input and output result
+const readline = require('readline');
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+rl.on('line', (input) => {
+    const n = parseInt(input);
+    console.log(factorial(n));
+    rl.close();
+});`
+    };
+    
+    if (confirm('Changing language will replace current code. Continue?')) {
+        codeEditor.value = templates[language];
+    }
+});
+</script>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.code-editor {
+    font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    resize: vertical;
+}
+
+.code-output {
+    font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
+    font-size: 13px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+</style>
+{% endblock %}

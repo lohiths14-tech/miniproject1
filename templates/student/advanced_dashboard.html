@@ -1,0 +1,713 @@
+{% extends "base.html" %}
+
+{% block title %}Advanced Student Dashboard - AI Grading System{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-gradient-primary text-white">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2><i class="fas fa-graduation-cap"></i> Advanced Student Dashboard</h2>
+                            <p class="mb-0">Welcome back! Ready to enhance your coding skills with AI-powered learning?</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-light btn-sm" onclick="refreshDashboard()">
+                                    <i class="fas fa-sync-alt"></i> Refresh
+                                </button>
+                                <button class="btn btn-light btn-sm" onclick="showNotifications()">
+                                    <i class="fas fa-bell"></i> Notifications <span class="badge bg-danger">3</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Row -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">Assignments</h6>
+                            <h3 class="mb-0" id="totalAssignments">12</h3>
+                        </div>
+                        <div class="ms-3">
+                            <i class="fas fa-tasks fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">Average Score</h6>
+                            <h3 class="mb-0" id="averageScore">87.5%</h3>
+                        </div>
+                        <div class="ms-3">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">Achievement Level</h6>
+                            <h3 class="mb-0" id="achievementLevel">Advanced</h3>
+                        </div>
+                        <div class="ms-3">
+                            <i class="fas fa-trophy fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">Streak Days</h6>
+                            <h3 class="mb-0" id="streakDays">15</h3>
+                        </div>
+                        <div class="ms-3">
+                            <i class="fas fa-fire fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Main Content Area -->
+        <div class="col-md-8">
+            <!-- Quick Actions -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5><i class="fas fa-rocket"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-primary w-100 h-100" onclick="openCodeEditor()">
+                                <i class="fas fa-code fa-2x d-block mb-2"></i>
+                                <strong>Code Editor</strong><br>
+                                <small>Start coding now</small>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-success w-100 h-100" onclick="viewAssignments()">
+                                <i class="fas fa-tasks fa-2x d-block mb-2"></i>
+                                <strong>Assignments</strong><br>
+                                <small>View all tasks</small>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-info w-100 h-100" onclick="openGamification()">
+                                <i class="fas fa-gamepad fa-2x d-block mb-2"></i>
+                                <strong>Achievements</strong><br>
+                                <small>Track progress</small>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-warning w-100 h-100" onclick="viewGrades()">
+                                <i class="fas fa-chart-bar fa-2x d-block mb-2"></i>
+                                <strong>Grades</strong><br>
+                                <small>Check scores</small>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-secondary w-100 h-100" onclick="openCollaboration()">
+                                <i class="fas fa-users fa-2x d-block mb-2"></i>
+                                <strong>Collaborate</strong><br>
+                                <small>Work together</small>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-dark w-100 h-100" onclick="viewProfile()">
+                                <i class="fas fa-user-cog fa-2x d-block mb-2"></i>
+                                <strong>Profile</strong><br>
+                                <small>Settings</small>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card mb-4">
+                <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-history"></i> Recent Activity</h5>
+                    <button class="btn btn-sm btn-light" onclick="loadMoreActivity()">
+                        <i class="fas fa-refresh"></i> Refresh
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="timeline" id="activityTimeline">
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-success"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1">Assignment Submitted</h6>
+                                <p class="mb-1">Binary Search Algorithm - Score: 95%</p>
+                                <small class="text-muted">2 hours ago</small>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-info"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1">Badge Earned</h6>
+                                <p class="mb-1">🏆 Speed Demon - Completed in under 5 minutes</p>
+                                <small class="text-muted">1 day ago</small>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-warning"></div>
+                            <div class="timeline-content">
+                                <h6 class="mb-1">Code Review</h6>
+                                <p class="mb-1">Sorting Algorithms - Feedback received</p>
+                                <small class="text-muted">2 days ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Charts -->
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5><i class="fas fa-chart-area"></i> Performance Analytics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <canvas id="scoreChart" width="400" height="200"></canvas>
+                        </div>
+                        <div class="col-md-6">
+                            <canvas id="progressChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <!-- System Status -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h6><i class="fas fa-server"></i> System Status</h6>
+                </div>
+                <div class="card-body">
+                    <div class="status-item d-flex justify-content-between align-items-center mb-2">
+                        <span><i class="fas fa-shield-alt text-success"></i> AI Grading</span>
+                        <span class="badge bg-success">Online</span>
+                    </div>
+                    <div class="status-item d-flex justify-content-between align-items-center mb-2">
+                        <span><i class="fas fa-search text-warning"></i> Plagiarism Check</span>
+                        <span class="badge bg-warning">Active</span>
+                    </div>
+                    <div class="status-item d-flex justify-content-between align-items-center mb-2">
+                        <span><i class="fas fa-database text-info"></i> Database</span>
+                        <span class="badge bg-info">Connected</span>
+                    </div>
+                    <div class="status-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-users text-primary"></i> Collaboration</span>
+                        <span class="badge bg-primary">Ready</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Deadlines -->
+            <div class="card mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h6><i class="fas fa-clock"></i> Upcoming Deadlines</h6>
+                </div>
+                <div class="card-body">
+                    <div class="deadline-item mb-3">
+                        <h6 class="mb-1">Data Structures Lab</h6>
+                        <p class="mb-1 text-muted">Implement LinkedList</p>
+                        <small class="text-danger"><i class="fas fa-clock"></i> Due in 2 days</small>
+                    </div>
+                    <div class="deadline-item mb-3">
+                        <h6 class="mb-1">Algorithm Analysis</h6>
+                        <p class="mb-1 text-muted">Big O Complexity</p>
+                        <small class="text-warning"><i class="fas fa-clock"></i> Due in 5 days</small>
+                    </div>
+                    <div class="deadline-item">
+                        <h6 class="mb-1">Final Project</h6>
+                        <p class="mb-1 text-muted">Web Application</p>
+                        <small class="text-info"><i class="fas fa-clock"></i> Due in 2 weeks</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h6><i class="fas fa-link"></i> Quick Links</h6>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <a href="/enhanced-code-editor" class="list-group-item list-group-item-action">
+                            <i class="fas fa-code text-primary"></i> Enhanced Code Editor
+                        </a>
+                        <a href="/lab-assignments" class="list-group-item list-group-item-action">
+                            <i class="fas fa-flask text-success"></i> Lab Assignments
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action" onclick="downloadReports()">
+                            <i class="fas fa-download text-info"></i> Download Reports
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action" onclick="showHelp()">
+                            <i class="fas fa-question-circle text-warning"></i> Help & Support
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notifications Modal -->
+<div class="modal fade" id="notificationsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-bell"></i> Notifications</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="notification-item mb-3">
+                    <div class="d-flex">
+                        <div class="notification-icon bg-success text-white rounded-circle me-3">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">Assignment Graded</h6>
+                            <p class="mb-1">Your Binary Search assignment has been graded: 95%</p>
+                            <small class="text-muted">2 hours ago</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification-item mb-3">
+                    <div class="d-flex">
+                        <div class="notification-icon bg-info text-white rounded-circle me-3">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">Achievement Unlocked</h6>
+                            <p class="mb-1">Speed Demon badge earned!</p>
+                            <small class="text-muted">1 day ago</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="notification-item">
+                    <div class="d-flex">
+                        <div class="notification-icon bg-warning text-white rounded-circle me-3">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">Deadline Reminder</h6>
+                            <p class="mb-1">Data Structures Lab due in 2 days</p>
+                            <small class="text-muted">3 hours ago</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="markAllRead()">Mark All Read</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.bg-gradient-primary {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+}
+
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -35px;
+    top: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #007bff;
+}
+
+.notification-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.status-item:last-child {
+    border-bottom: none;
+}
+
+.btn-outline-primary:hover, .btn-outline-success:hover, .btn-outline-info:hover,
+.btn-outline-warning:hover, .btn-outline-secondary:hover, .btn-outline-dark:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Dashboard functionality
+function refreshDashboard() {
+    showToast('Dashboard refreshed!', 'success');
+    // Simulate data refresh
+    document.getElementById('totalAssignments').textContent = Math.floor(Math.random() * 20) + 10;
+    document.getElementById('averageScore').textContent = (Math.random() * 20 + 80).toFixed(1) + '%';
+    document.getElementById('streakDays').textContent = Math.floor(Math.random() * 30) + 1;
+}
+
+function showNotifications() {
+    $('#notificationsModal').modal('show');
+}
+
+function markAllRead() {
+    showToast('All notifications marked as read', 'info');
+    $('#notificationsModal').modal('hide');
+}
+
+// Navigation functions
+function openCodeEditor() {
+    showToast('Opening Code Editor...', 'info');
+    setTimeout(() => window.location.href = '/enhanced-code-editor', 1000);
+}
+
+function viewAssignments() {
+    showToast('Loading Assignments...', 'info');
+    setTimeout(() => window.location.href = '/assignments', 1000);
+}
+
+function openGamification() {
+    showToast('Opening Achievement Dashboard...', 'success');
+    setTimeout(() => window.location.href = '/gamification', 1000);
+}
+
+function viewGrades() {
+    showToast('Loading Grade Report...', 'info');
+    // Simulate grades view
+    const grades = [
+        { assignment: 'Binary Search', score: 95, date: '2025-09-25' },
+        { assignment: 'Sorting Algorithms', score: 88, date: '2025-09-20' },
+        { assignment: 'Data Structures', score: 92, date: '2025-09-15' }
+    ];
+    
+    setTimeout(() => {
+        let gradesHtml = '<div class="card"><div class="card-header bg-primary text-white"><h5>Grade Report</h5></div><div class="card-body">';
+        grades.forEach(grade => {
+            gradesHtml += `
+                <div class="row mb-2 align-items-center">
+                    <div class="col-md-6">${grade.assignment}</div>
+                    <div class="col-md-3"><span class="badge bg-${grade.score >= 90 ? 'success' : grade.score >= 80 ? 'warning' : 'danger'}">${grade.score}%</span></div>
+                    <div class="col-md-3"><small class="text-muted">${grade.date}</small></div>
+                </div>
+            `;
+        });
+        gradesHtml += '</div></div>';
+        
+        showModal('Grade Report', gradesHtml);
+    }, 1000);
+}
+
+function openCollaboration() {
+    showToast('Opening Collaboration Workspace...', 'info');
+    setTimeout(() => window.location.href = '/collaboration', 1000);
+}
+
+function viewProfile() {
+    showToast('Opening Profile Settings...', 'info');
+    setTimeout(() => {
+        const profileHtml = `
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <i class="fas fa-user-circle fa-5x text-primary"></i>
+                            <h5 class="mt-2">Current Student</h5>
+                        </div>
+                        <div class="col-md-8">
+                            <h6>Profile Information</h6>
+                            <p><strong>Email:</strong> student@example.com</p>
+                            <p><strong>Role:</strong> Student</p>
+                            <p><strong>Level:</strong> Advanced</p>
+                            <p><strong>Join Date:</strong> September 2025</p>
+                            <p><strong>Total Points:</strong> 2,450</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        showModal('Profile Settings', profileHtml);
+    }, 1000);
+}
+
+function loadMoreActivity() {
+    showToast('Loading recent activity...', 'info');
+    // Simulate loading more activity
+    setTimeout(() => {
+        const newActivity = `
+            <div class="timeline-item">
+                <div class="timeline-marker bg-primary"></div>
+                <div class="timeline-content">
+                    <h6 class="mb-1">New Assignment Available</h6>
+                    <p class="mb-1">Advanced Algorithms - Due in 1 week</p>
+                    <small class="text-muted">Just now</small>
+                </div>
+            </div>
+        `;
+        document.getElementById('activityTimeline').insertAdjacentHTML('afterbegin', newActivity);
+        showToast('Activity updated!', 'success');
+    }, 1000);
+}
+
+function downloadReports() {
+    showToast('Generating comprehensive report...', 'success');
+    
+    setTimeout(() => {
+        const reportData = `STUDENT COMPREHENSIVE REPORT
+===============================
+Generated: ${new Date().toLocaleString()}
+Student: Current Student
+Email: student@example.com
+
+ACADEMIC PERFORMANCE
+-------------------
+Total Assignments: 12
+Average Score: 87.5%
+Highest Score: 95%
+Current Level: Advanced
+Streak Days: 15
+
+RECENT ASSIGNMENTS
+-----------------
+1. Binary Search Algorithm - 95% (2025-09-25)
+2. Sorting Algorithms - 88% (2025-09-20)
+3. Data Structures - 92% (2025-09-15)
+
+ACHIEVEMENTS
+-----------
+🏆 Speed Demon - Completed assignment in under 5 minutes
+🎯 Perfectionist - Achieved 100% score
+🔥 Streak Master - 15-day submission streak
+
+UPCOMING DEADLINES
+-----------------
+• Data Structures Lab - Due in 2 days
+• Algorithm Analysis - Due in 5 days  
+• Final Project - Due in 2 weeks
+
+SYSTEM STATUS
+------------
+AI Grading: Online
+Plagiarism Check: Active
+Database: Connected
+Collaboration: Ready
+
+Generated by AI Grading System v2.0`;
+        
+        const blob = new Blob([reportData], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'student_comprehensive_report.txt';
+        a.click();
+        window.URL.revokeObjectURL(url);
+        
+        showToast('Report downloaded successfully!', 'success');
+    }, 2000);
+}
+
+function showHelp() {
+    const helpContent = `
+        <div class="card">
+            <div class="card-body">
+                <h6>Quick Help Guide</h6>
+                <div class="accordion" id="helpAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#help1">
+                                How to submit assignments?
+                            </button>
+                        </h2>
+                        <div id="help1" class="accordion-collapse collapse show" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                1. Click on "Code Editor" or "Assignments"<br>
+                                2. Select the assignment you want to complete<br>
+                                3. Write your code in the editor<br>
+                                4. Click "Submit" to get AI feedback
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#help2">
+                                How does AI grading work?
+                            </button>
+                        </h2>
+                        <div id="help2" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                Our AI system evaluates:<br>
+                                • Code correctness (50%)<br>
+                                • Code quality & style (30%)<br>
+                                • Algorithm efficiency (20%)<br>
+                                Plus real-time feedback and suggestions!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    showModal('Help & Support', helpContent);
+}
+
+// Utility functions
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    toast.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+        }
+    }, 4000);
+}
+
+function showModal(title, content) {
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.innerHTML = `
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">${title}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    ${content}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    
+    const bsModal = new bootstrap.Modal(modal);
+    bsModal.show();
+    
+    modal.addEventListener('hidden.bs.modal', () => {
+        document.body.removeChild(modal);
+    });
+}
+
+// Initialize charts
+document.addEventListener('DOMContentLoaded', function() {
+    // Score progression chart
+    const scoreCtx = document.getElementById('scoreChart').getContext('2d');
+    new Chart(scoreCtx, {
+        type: 'line',
+        data: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+            datasets: [{
+                label: 'Average Score',
+                data: [75, 82, 88, 85, 92],
+                borderColor: '#007bff',
+                backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Score Progression'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        }
+    });
+    
+    // Assignment completion chart
+    const progressCtx = document.getElementById('progressChart').getContext('2d');
+    new Chart(progressCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Completed', 'In Progress', 'Pending'],
+            datasets: [{
+                data: [8, 2, 2],
+                backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Assignment Status'
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

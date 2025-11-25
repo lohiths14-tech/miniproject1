@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: ai-grading-system
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn "app:create_app()" --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: MONGODB_URI
+        sync: false
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: ai-grading-redis
+          property: connectionString
+
+  - type: redis
+    name: ai-grading-redis
+    ipAllowList: [] # Only allow internal connections
+    plan: free # Use free tier if available, otherwise starter

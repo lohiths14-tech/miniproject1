@@ -1,0 +1,22 @@
+{
+    "recommendations": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.flake8",
+        "ms-python.black-formatter",
+        "njpwerner.autodocstring",
+        "wholroyd.jinja",
+        "cstrap.flask-snippets",
+        "bradlc.vscode-tailwindcss",
+        "formulahendry.auto-rename-tag",
+        "rangav.vscode-thunder-client",
+        "eamodio.gitlens",
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        "ms-vsliveshare.vsliveshare",
+        "visualstudioexptteam.vscodeintellicode"
+    ],
+    "unwantedRecommendations": [
+        "ms-python.pylint"
+    ]
+}

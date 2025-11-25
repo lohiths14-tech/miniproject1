@@ -1,0 +1,137 @@
+# Helm Values - AI Grading System
+# Production-ready configuration
+
+# Global settings
+global:
+  imageRegistry: ""
+  storageClass: "standard"
+
+# Application settings
+replicaCount: 3
+image:
+  repository: ai-grading
+  pullPolicy: IfNotPresent
+  tag: "2.0.0"
+
+# Service configuration
+service:
+  type: LoadBalancer
+  port: 80
+  targetPort: 5000
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  hosts:
+    - host: grading.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ai-grading-tls
+      hosts:
+        - grading.example.com
+
+# Auto-scaling
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+# Resource limits
+resources:
+  limits:
+    cpu: 2000m
+    memory: 2Gi
+  requests:
+    cpu: 1000m
+    memory: 1Gi
+
+# MongoDB configuration
+mongodb:
+  enabled: true
+  architecture: replicaset
+  replicaCount: 3
+  auth:
+    enabled: true
+    rootPassword: "change-me-in-production"
+    database: ai_grading
+  persistence:
+    enabled: true
+    size: 20Gi
+  resources:
+    limits:
+      memory: 2Gi
+      cpu: 1000m
+
+# Redis configuration
+redis:
+  enabled: true
+  architecture: standalone
+  auth:
+    enabled: true
+    password: "change-me-in-production"
+  master:
+    persistence:
+      enabled: true
+      size: 5Gi
+
+# Monitoring
+monitoring:
+  enabled: true
+  prometheus:
+    enabled: true
+  grafana:
+    enabled: true
+    adminPassword: "change-me-in-production"
+
+# Environment variables
+env:
+  - name: FLASK_ENV
+    value: "production"
+  - name: OPENAI_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: ai-grading-secrets
+        key: openai-api-key
+
+# Persistence
+persistence:
+  enabled: true
+  size: 10Gi
+  accessMode: ReadWriteMany
+
+# Health checks
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 5000
+ initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 5000
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 3
+
+# Security
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+
+podSecurityContext:
+  seccompProfile:
+    type: RuntimeDefault

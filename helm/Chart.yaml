@@ -1,0 +1,32 @@
+---
+# Helm Chart for AI Grading System
+# Kubernetes deployment with auto-scaling and monitoring
+
+apiVersion: v2
+name: ai-grading-system
+description: AI-Powered Grading System for Programming Assignments
+type: application
+version: 2.0.0
+appVersion: "2.0"
+
+keywords:
+  - education
+  - ai
+  - grading
+  - plagiarism-detection
+
+maintainers:
+  - name: AI Grading Team
+    email: team@ai-grading.com
+
+dependencies:
+  - name: mongodb
+    version: 13.x.x
+    repository: https://charts.bitnami.com/bitnami
+  - name: redis
+    version: 17.x.x
+    repository: https://charts.bitnami.com/bitnami
+  - name: prometheus
+    version: 15.x.x
+    repository: https://prometheus-community.github.io/helm-charts
+    condition: monitoring.enabled

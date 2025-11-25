@@ -1,0 +1,25 @@
+/.well-known/security.txt
+
+# Security Contact Information
+# As per RFC 9116
+
+Contact: mailto:security@ai-grading.com
+Contact: https://ai-grading.com/security
+Expires: 2026-12-31T23:59:59.000Z
+Encryption: https://ai-grading.com/pgp-key.txt
+Preferred-Languages: en
+Canonical: https://ai-grading.com/.well-known/security.txt
+
+# Security Policy
+Policy: https://ai-grading.com/security-policy
+
+# Acknowledgments
+Acknowledgments: https://ai-grading.com/security/hall-of-fame
+
+# Hiring
+Hiring: https://ai-grading.com/careers/security
+
+# Additional Information
+# Please report security vulnerabilities confidentially
+# Expected response time: 24-48 hours
+# Bug bounty program available for qualifying vulnerabilities

@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard - AI Grading System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-success">
+                <h4><i class="fas fa-check-circle"></i> Welcome to Student Dashboard!</h4>
+                <p class="mb-0">Login successful! You are now logged in as a student.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5><i class="fas fa-tachometer-alt"></i> Dashboard Overview</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Quick Actions:</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="list-group">
+                                <a href="/assignments" class="list-group-item list-group-item-action">
+                                    <i class="fas fa-tasks"></i> View Assignments
+                                </a>
+                                <a href="/code-editor" class="list-group-item list-group-item-action">
+                                    <i class="fas fa-code"></i> Code Editor
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action" onclick="showAlert('Grades feature coming soon!', 'info')">
+                                    <i class="fas fa-chart-bar"></i> View Grades
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="list-group">
+                                <a href="#" class="list-group-item list-group-item-action" onclick="showAlert('Submission history feature coming soon!', 'info')">
+                                    <i class="fas fa-history"></i> Submission History
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action" onclick="showAlert('Profile settings feature coming soon!', 'info')">
+                                    <i class="fas fa-user"></i> Profile Settings
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action" onclick="downloadReports()">
+                                    <i class="fas fa-download"></i> Download Reports
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h6><i class="fas fa-info-circle"></i> System Status</h6>
+                </div>
+                <div class="card-body">
+                    <p class="text-success"><i class="fas fa-check"></i> Authentication: Working</p>
+                    <p class="text-info"><i class="fas fa-cog"></i> AI Grading: Ready</p>
+                    <p class="text-warning"><i class="fas fa-database"></i> Database: In-Memory</p>
+                    <p class="text-success"><i class="fas fa-shield-alt"></i> Plagiarism Check: Active</p>
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <div class="card-header bg-secondary text-white">
+                    <h6><i class="fas fa-user"></i> User Info</h6>
+                </div>
+                <div class="card-body">
+                    <p><strong>Role:</strong> Student</p>
+                    <p><strong>Status:</strong> <span class="text-success">Active</span></p>
+                    <p><strong>Login:</strong> <span id="currentTime"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('currentTime').textContent = new Date().toLocaleString();
+
+// Function to show alerts
+function showAlert(message, type = 'info') {
+    const alertHtml = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            <i class="fas fa-info-circle"></i> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    // Add alert to the top of the container
+    $('.container').prepend(alertHtml);
+    
+    // Auto-hide after 3 seconds
+    setTimeout(function() {
+        $('.alert:first').fadeOut(function() {
+            $(this).remove();
+        });
+    }, 3000);
+}
+
+// Function to download reports
+function downloadReports() {
+    showAlert('Generating student report...', 'success');
+    
+    // Simulate report generation
+    setTimeout(function() {
+        const reportData = `Student Report
+=============
+Name: Current Student
+Role: Student
+Login Time: ${new Date().toLocaleString()}
+Status: Active
+
+Quick Actions Available:
+- View Assignments
+- Code Editor
+- View Grades
+- Submission History
+- Profile Settings
+
+System Status:
+- Authentication: Working
+- AI Grading: Ready
+- Database: In-Memory
+- Plagiarism Check: Active`;
+        
+        // Create and download file
+        const blob = new Blob([reportData], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'student_report.txt';
+        a.click();
+        window.URL.revokeObjectURL(url);
+        
+        showAlert('Report downloaded successfully!', 'success');
+    }, 1500);
+}
+</script>
+{% endblock %}

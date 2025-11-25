@@ -1,0 +1,408 @@
+{% extends "base.html" %}
+
+{% block title %}Leaderboard - AI Grading System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-trophy"></i> Student Leaderboard</h2>
+                <a href="/lecturer-dashboard" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Filters and Controls -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="form-label">Sort By:</label>
+                            <select class="form-select" id="sortBy" onchange="updateLeaderboard()">
+                                <option value="overall">Overall Score</option>
+                                <option value="recent">Recent Performance</option>
+                                <option value="submissions">Total Submissions</option>
+                                <option value="accuracy">Accuracy Rate</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Time Period:</label>
+                            <select class="form-select" id="timePeriod" onchange="updateLeaderboard()">
+                                <option value="all">All Time</option>
+                                <option value="month">This Month</option>
+                                <option value="week">This Week</option>
+                                <option value="assignment">Per Assignment</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Show:</label>
+                            <select class="form-select" id="displayCount" onchange="updateLeaderboard()">
+                                <option value="all">All Students</option>
+                                <option value="10">Top 10</option>
+                                <option value="5">Top 5</option>
+                                <option value="3">Top 3</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <h4>🏆 Current Champion</h4>
+                    <h5>John Doe</h5>
+                    <p class="mb-0">85% Overall Score</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Podium for Top 3 -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5><i class="fas fa-medal"></i> Top Performers Podium</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <!-- 2nd Place -->
+                        <div class="col-md-4 order-md-1">
+                            <div class="podium-position" style="background: linear-gradient(135deg, #c0c0c0, #e8e8e8); padding: 20px; border-radius: 15px; margin: 10px 0;">
+                                <div style="height: 120px;">
+                                    <i class="fas fa-medal text-secondary fa-3x mb-2"></i>
+                                    <h4>2nd Place</h4>
+                                    <h5>Jane Smith</h5>
+                                    <p class="text-muted">CS002</p>
+                                    <h3 class="text-warning">65%</h3>
+                                    <small>8 submissions</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 1st Place (Highest) -->
+                        <div class="col-md-4 order-md-2">
+                            <div class="podium-position" style="background: linear-gradient(135deg, #ffd700, #ffed4e); padding: 30px; border-radius: 15px; margin: 0 0 20px 0; transform: scale(1.1);">
+                                <div style="height: 140px;">
+                                    <i class="fas fa-crown text-warning fa-4x mb-2"></i>
+                                    <h3>🏆 1st Place</h3>
+                                    <h4>John Doe</h4>
+                                    <p class="text-muted">CS001</p>
+                                    <h2 class="text-success">85%</h2>
+                                    <small>12 submissions</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 3rd Place -->
+                        <div class="col-md-4 order-md-3">
+                            <div class="podium-position" style="background: linear-gradient(135deg, #cd7f32, #deb887); padding: 20px; border-radius: 15px; margin: 10px 0;">
+                                <div style="height: 120px;">
+                                    <i class="fas fa-medal text-danger fa-3x mb-2"></i>
+                                    <h4>3rd Place</h4>
+                                    <h5>Mike Johnson</h5>
+                                    <p class="text-muted">CS003</p>
+                                    <h3 class="text-danger">35%</h3>
+                                    <small>4 submissions</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Detailed Leaderboard -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5><i class="fas fa-list-ol"></i> Detailed Rankings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Student</th>
+                                    <th>USN</th>
+                                    <th>Overall Score</th>
+                                    <th>Submissions</th>
+                                    <th>Accuracy</th>
+                                    <th>Recent Activity</th>
+                                    <th>Badge</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboardTable">
+                                <tr class="table-warning">
+                                    <td>
+                                        <span class="badge bg-warning text-dark" style="font-size: 1.2em;">
+                                            <i class="fas fa-crown"></i> 1
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar bg-success text-white rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <div>
+                                                <strong>John Doe</strong><br>
+                                                <small class="text-muted">john.doe@example.com</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><code>CS001</code></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="progress me-2" style="width: 100px; height: 20px;">
+                                                <div class="progress-bar bg-success" style="width: 85%"></div>
+                                            </div>
+                                            <strong class="text-success">85%</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">12</span> total<br>
+                                        <small class="text-success">10 passed</small>
+                                    </td>
+                                    <td>
+                                        <span class="text-success">83%</span>
+                                    </td>
+                                    <td>
+                                        <small>2 hours ago</small><br>
+                                        <small class="text-success">Active</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-warning">🏆 Champion</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-secondary" style="font-size: 1.1em;">2</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar bg-info text-white rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <div>
+                                                <strong>Jane Smith</strong><br>
+                                                <small class="text-muted">jane.smith@example.com</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><code>CS002</code></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="progress me-2" style="width: 100px; height: 20px;">
+                                                <div class="progress-bar bg-warning" style="width: 65%"></div>
+                                            </div>
+                                            <strong class="text-warning">65%</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">8</span> total<br>
+                                        <small class="text-success">5 passed</small>
+                                    </td>
+                                    <td>
+                                        <span class="text-warning">63%</span>
+                                    </td>
+                                    <td>
+                                        <small>1 day ago</small><br>
+                                        <small class="text-success">Active</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">📈 Improving</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-danger" style="font-size: 1.1em;">3</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar bg-warning text-white rounded-circle me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <div>
+                                                <strong>Mike Johnson</strong><br>
+                                                <small class="text-muted">mike.johnson@example.com</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><code>CS003</code></td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="progress me-2" style="width: 100px; height: 20px;">
+                                                <div class="progress-bar bg-danger" style="width: 35%"></div>
+                                            </div>
+                                            <strong class="text-danger">35%</strong>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">4</span> total<br>
+                                        <small class="text-danger">1 passed</small>
+                                    </td>
+                                    <td>
+                                        <span class="text-danger">25%</span>
+                                    </td>
+                                    <td>
+                                        <small>3 days ago</small><br>
+                                        <small class="text-warning">Needs Help</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-warning">⚠️ At Risk</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Achievement Summary -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-star"></i> Achievement Badges</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-4 text-center">
+                            <i class="fas fa-crown fa-2x text-warning mb-2"></i>
+                            <p><small>Champion</small></p>
+                            <span class="badge bg-warning">1</span>
+                        </div>
+                        <div class="col-4 text-center">
+                            <i class="fas fa-chart-line fa-2x text-info mb-2"></i>
+                            <p><small>Improving</small></p>
+                            <span class="badge bg-info">1</span>
+                        </div>
+                        <div class="col-4 text-center">
+                            <i class="fas fa-exclamation-triangle fa-2x text-warning mb-2"></i>
+                            <p><small>At Risk</small></p>
+                            <span class="badge bg-warning">1</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-download"></i> Export Leaderboard</h5>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-primary w-100 mb-2" onclick="exportLeaderboard('pdf')">
+                        <i class="fas fa-file-pdf"></i> Export as PDF
+                    </button>
+                    <button class="btn btn-success w-100" onclick="exportLeaderboard('excel')">
+                        <i class="fas fa-file-excel"></i> Export as Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateLeaderboard() {
+    const sortBy = document.getElementById('sortBy').value;
+    const timePeriod = document.getElementById('timePeriod').value;
+    const displayCount = document.getElementById('displayCount').value;
+    
+    showAlert(`Updating leaderboard: ${sortBy} for ${timePeriod} (showing ${displayCount})`, 'info');
+    
+    // Simulate leaderboard update
+    setTimeout(() => {
+        showAlert('Leaderboard updated successfully!', 'success');
+    }, 1000);
+}
+
+function exportLeaderboard(format) {
+    showAlert(`Generating ${format.toUpperCase()} leaderboard export...`, 'info');
+    
+    setTimeout(function() {
+        const leaderboardData = `Student Leaderboard Export (${format.toUpperCase()})
+=======================================
+Generated: ${new Date().toLocaleString()}
+
+RANKINGS:
+=========
+1. 🏆 John Doe (CS001) - 85% overall, 12 submissions, 83% accuracy
+   Badge: Champion
+   Email: john.doe@example.com
+   Status: Active (2 hours ago)
+
+2. 🥈 Jane Smith (CS002) - 65% overall, 8 submissions, 63% accuracy  
+   Badge: Improving
+   Email: jane.smith@example.com
+   Status: Active (1 day ago)
+
+3. 🥉 Mike Johnson (CS003) - 35% overall, 4 submissions, 25% accuracy
+   Badge: At Risk
+   Email: mike.johnson@example.com
+   Status: Needs Help (3 days ago)
+
+SUMMARY STATISTICS:
+==================
+- Total Students: 3
+- Average Score: 62%
+- Top Performer: John Doe (85%)
+- Most Submissions: John Doe (12)
+- Students At Risk: 1 (Mike Johnson)
+
+ACHIEVEMENT BADGES:
+==================
+- Champions: 1 student
+- Improving: 1 student  
+- At Risk: 1 student
+
+Generated by AI Grading System Leaderboard`;
+        
+        const blob = new Blob([leaderboardData], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `leaderboard_export.${format === 'pdf' ? 'txt' : 'txt'}`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        
+        showAlert(`${format.toUpperCase()} leaderboard exported successfully!`, 'success');
+    }, 2000);
+}
+
+// Function to show alerts
+function showAlert(message, type = 'info') {
+    const alertHtml = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            <i class="fas fa-info-circle"></i> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    $('.container').prepend(alertHtml);
+    
+    setTimeout(function() {
+        $('.alert:first').fadeOut(function() {
+            $(this).remove();
+        });
+    }, 3000);
+}
+
+// Auto-refresh leaderboard every 30 seconds
+setInterval(function() {
+    console.log('Auto-refreshing leaderboard data...');
+}, 30000);
+</script>
+{% endblock %}

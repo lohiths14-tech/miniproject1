@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+
+{% block title %}Login - AI Grading System{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Login page specific styles for better visibility */
+.card {
+    background-color: white !important;
+    color: #333 !important;
+}
+
+.card-body {
+    background-color: white !important;
+}
+
+.form-label {
+    color: #333 !important;
+    font-weight: 500;
+}
+
+.form-control {
+    background-color: white !important;
+    border: 2px solid #e9ecef !important;
+    color: #333 !important;
+}
+
+.form-control:focus {
+    background-color: white !important;
+    border-color: #007bff !important;
+    color: #333 !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-control::placeholder {
+    color: #666 !important;
+}
+
+.input-group-text {
+    background-color: #f8f9fa !important;
+    border: 2px solid #e9ecef !important;
+    color: #333 !important;
+}
+
+.form-check-label {
+    color: #333 !important;
+}
+
+.text-center p {
+    color: #333 !important;
+}
+
+.text-muted {
+    color: #666 !important;
+}
+
+.form-text {
+    color: #666 !important;
+}
+
+.modal-content {
+    background-color: white !important;
+    color: #333 !important;
+}
+
+.modal-header {
+    background-color: #f8f9fa !important;
+    color: #333 !important;
+}
+
+.modal-title {
+    color: #333 !important;
+}
+
+.modal-body {
+    background-color: white !important;
+    color: #333 !important;
+}
+
+/* Ensure all text is visible */
+body {
+    background-color: #f8f9fa !important;
+}
+
+.container {
+    color: #333 !important;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3><i class="fas fa-sign-in-alt"></i> Login</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">
+                                Remember me
+                            </label>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <p class="mb-2">Don't have an account?</p>
+                        <a href="{{ url_for('signup') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-user-plus"></i> Create Account
+                        </a>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-muted" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">
+                            Forgot your password?
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Forgot Password Modal -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reset Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="forgotPasswordForm">
+                    <div class="mb-3">
+                        <label for="resetEmail" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="resetEmail" name="email" required>
+                        <div class="form-text">
+                            Enter your email address and we'll send you a link to reset your password.
+                        </div>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Send Reset Link
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Toggle password visibility
+    $('#togglePassword').click(function() {
+        const passwordField = $('#password');
+        const icon = $(this).find('i');
+        
+        if (passwordField.attr('type') === 'password') {
+            passwordField.attr('type', 'text');
+            icon.removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+            passwordField.attr('type', 'password');
+            icon.removeClass('fa-eye-slash').addClass('fa-eye');
+        }
+    });
+    
+    // Handle login form submission
+    $('#loginForm').submit(function(e) {
+        e.preventDefault();
+        
+        const formData = {
+            email: $('#email').val(),
+            password: $('#password').val()
+        };
+        
+        // Show loading state
+        const submitBtn = $(this).find('button[type="submit"]');
+        const originalText = submitBtn.html();
+        submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Logging in...').prop('disabled', true);
+        
+        $.ajax({
+            url: '/api/auth/login',
+            method: 'POST',
+            data: JSON.stringify(formData),
+            contentType: 'application/json',
+            success: function(response) {
+                // Store token
+                localStorage.setItem('token', response.access_token);
+                localStorage.setItem('user', JSON.stringify(response.user));
+                
+                showAlert('Login successful! Redirecting...', 'success');
+                
+                // Redirect based on user role
+                setTimeout(function() {
+                    if (response.user.role === 'student') {
+                        window.location.href = '/student-dashboard';
+                    } else {
+                        window.location.href = '/lecturer-dashboard';
+                    }
+                }, 1500);
+            },
+            error: function(xhr) {
+                const response = xhr.responseJSON;
+                showAlert(response.error || 'Login failed. Please try again.', 'danger');
+                
+                // Reset button
+                submitBtn.html(originalText).prop('disabled', false);
+            }
+        });
+    });
+    
+    // Handle forgot password form
+    $('#forgotPasswordForm').submit(function(e) {
+        e.preventDefault();
+        
+        const email = $('#resetEmail').val();
+        
+        $.ajax({
+            url: '/api/auth/forgot-password',
+            method: 'POST',
+            data: JSON.stringify({email: email}),
+            contentType: 'application/json',
+            success: function(response) {
+                showAlert('Password reset email sent successfully!', 'success');
+                $('#forgotPasswordModal').modal('hide');
+                $('#forgotPasswordForm')[0].reset();
+            },
+            error: function(xhr) {
+                const response = xhr.responseJSON;
+                showAlert(response.error || 'Failed to send reset email.', 'danger');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

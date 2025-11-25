@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collaboration Workspace - AI Grading System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .collaboration-workspace { height: 100vh; overflow: hidden; }
+        .code-editor { width: 100%; height: 400px; font-family: monospace; background: #1e1e1e; color: #d4d4d4; padding: 15px; border: none; resize: none; }
+        .participant-cursor { position: absolute; width: 2px; height: 20px; z-index: 1000; }
+        .cursor-alice { background: #ff6b6b; }
+        .cursor-bob { background: #4ecdc4; }
+        .cursor-charlie { background: #45b7d1; }
+        .chat-container { height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background: #f8f9fa; }
+        .participant-list { background: white; border-radius: 10px; padding: 15px; }
+        .participant-item { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 8px; margin-bottom: 5px; }
+        .participant-item.online { background: #d4edda; }
+        .participant-item.offline { background: #f8d7da; }
+        .status-indicator { width: 10px; height: 10px; border-radius: 50%; }
+        .status-online { background: #28a745; }
+        .status-offline { background: #dc3545; }
+        .session-header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        .suggestions-panel { max-height: 400px; overflow-y: auto; }
+        .suggestion-item { background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; margin-bottom: 8px; border-radius: 0 5px 5px 0; }
+        .suggestion-item.critical { background: #f8d7da; border-left-color: #dc3545; }
+        .suggestion-item.high { background: #ffeaa7; border-left-color: #fd7e14; }
+        .help-request { background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    {% extends "base.html" %}
+    
+    {% block content %}
+    <div class="collaboration-workspace">
+        <div class="container-fluid py-3">
+            <!-- Session Header -->
+            <div class="session-header">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h3 class="mb-1">🤝 Fibonacci Algorithm Collaboration</h3>
+                        <p class="mb-0">Real-time pair programming session • Assignment: Dynamic Programming</p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <button class="btn btn-light btn-sm me-2" onclick="requestHelp()">
+                            <i class="fas fa-hand-paper"></i> Request Help
+                        </button>
+                        <button class="btn btn-outline-light btn-sm" onclick="leaveSession()">
+                            <i class="fas fa-sign-out-alt"></i> Leave
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <!-- Main Code Editor -->
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">📝 Shared Code Editor</h5>
+                            <div>
+                                <span class="badge bg-success me-2">
+                                    <i class="fas fa-users"></i> 3 Active
+                                </span>
+                                <button class="btn btn-outline-primary btn-sm" onclick="runCode()">
+                                    <i class="fas fa-play"></i> Run
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body p-0 position-relative">
+                            <textarea class="code-editor" id="shared-code-editor">def fibonacci(n):
+    # TODO: Implement efficient fibonacci
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+# Let's optimize this together!
+print(fibonacci(10))</textarea>
+                            <!-- Live cursors will be positioned here -->
+                        </div>
+                    </div>
+                    
+                    <!-- AI Suggestions Panel -->
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="mb-0">🤖 AI Suggestions</h6>
+                        </div>
+                        <div class="card-body suggestions-panel">
+                            <div class="suggestion-item critical">
+                                <strong>Performance Issue:</strong> Exponential time complexity detected. Consider using memoization or dynamic programming.
+                                <div class="mt-2">
+                                    <button class="btn btn-sm btn-outline-primary">Apply Fix</button>
+                                    <button class="btn btn-sm btn-outline-secondary">Dismiss</button>
+                                </div>
+                            </div>
+                            <div class="suggestion-item">
+                                <strong>Code Completion:</strong> Add base case optimization for n=0 and n=1
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Collaboration Panel -->
+                <div class="col-lg-4">
+                    <!-- Help Request Status -->
+                    <div class="help-request" id="help-status" style="display: none;">
+                        <div class="h6 mb-2">🆘 Help Requested</div>
+                        <p class="mb-0">Lecturer assistance requested. Please wait...</p>
+                    </div>
+                    
+                    <!-- Participants -->
+                    <div class="participant-list mb-3">
+                        <h6 class="mb-3">👥 Participants</h6>
+                        <div class="participant-item online">
+                            <div class="status-indicator status-online"></div>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold">Alice (Host)</div>
+                                <small class="text-muted">Line 4, Column 12</small>
+                            </div>
+                            <div class="cursor-alice" style="width: 15px; height: 15px; border-radius: 50%;"></div>
+                        </div>
+                        <div class="participant-item online">
+                            <div class="status-indicator status-online"></div>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold">Bob</div>
+                                <small class="text-muted">Line 2, Column 8</small>
+                            </div>
+                            <div class="cursor-bob" style="width: 15px; height: 15px; border-radius: 50%;"></div>
+                        </div>
+                        <div class="participant-item online">
+                            <div class="status-indicator status-online"></div>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold">Charlie</div>
+                                <small class="text-muted">Viewing</small>
+                            </div>
+                            <div class="cursor-charlie" style="width: 15px; height: 15px; border-radius: 50%;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Live Chat -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0">💬 Chat</h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="chat-container" id="chat-messages">
+                                <div class="mb-2">
+                                    <strong>Alice:</strong> Let's work on optimizing this fibonacci function
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Bob:</strong> Good idea! The current version has O(2^n) complexity
+                                </div>
+                                <div class="mb-2">
+                                    <strong>Charlie:</strong> Should we use memoization or bottom-up DP?
+                                </div>
+                                <div class="mb-2 text-muted">
+                                    <small><i>AI Suggestion applied by Alice</i></small>
+                                </div>
+                            </div>
+                            <div class="p-2 border-top">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Type a message..." id="chat-input">
+                                    <button class="btn btn-primary" onclick="sendMessage()">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Session Controls -->
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <h6>🎮 Session Controls</h6>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-primary btn-sm" onclick="shareScreen()">
+                                    <i class="fas fa-desktop"></i> Share Screen
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm" onclick="recordSession()">
+                                    <i class="fas fa-record-vinyl"></i> Record Session
+                                </button>
+                                <button class="btn btn-outline-info btn-sm" onclick="inviteMore()">
+                                    <i class="fas fa-user-plus"></i> Invite More
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    
+    {% block scripts %}
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+    <script>
+        class CollaborationWorkspace {
+            constructor() {
+                this.socket = null;
+                this.sessionId = 'demo_session_123';
+                this.userId = 'demo_user';
+                this.username = 'Demo User';
+                this.participants = new Map();
+                this.isConnected = false;
+                
+                this.init();
+            }
+            
+            init() {
+                this.setupEditor();
+                this.setupChat();
+                this.connectWebSocket();
+                this.setupEventListeners();
+            }
+            
+            setupEditor() {
+                const editor = document.getElementById('shared-code-editor');
+                
+                // Simulate real-time typing
+                editor.addEventListener('input', (e) => {
+                    if (this.isConnected) {
+                        this.broadcastCodeChange({
+                            operation: 'insert',
+                            position: e.target.selectionStart,
+                            content: e.target.value,
+                            user_id: this.userId
+                        });
+                    }
+                });
+                
+                // Track cursor movement
+                editor.addEventListener('selectionchange', (e) => {
+                    if (this.isConnected) {
+                        this.broadcastCursorMove(e.target.selectionStart);
+                    }
+                });
+            }
+            
+            setupChat() {
+                const chatInput = document.getElementById('chat-input');
+                chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.sendMessage();
+                    }
+                });
+            }
+            
+            connectWebSocket() {
+                // Simulate WebSocket connection
+                // In real implementation: this.socket = io();
+                
+                setTimeout(() => {
+                    this.isConnected = true;
+                    this.simulateCollaboration();
+                }, 1000);
+            }
+            
+            simulateCollaboration() {
+                // Simulate real-time collaboration events
+                setInterval(() => {
+                    this.simulateParticipantActivity();
+                }, 3000);
+                
+                // Simulate AI suggestions
+                setTimeout(() => {
+                    this.showAISuggestion();
+                }, 5000);
+            }
+            
+            simulateParticipantActivity() {
+                const activities = [
+                    { user: 'Alice', action: 'typing at line 3' },
+                    { user: 'Bob', action: 'reviewing code' },
+                    { user: 'Charlie', action: 'analyzing complexity' }
+                ];
+                
+                const activity = activities[Math.floor(Math.random() * activities.length)];
+                this.updateParticipantStatus(activity.user, activity.action);
+            }
+            
+            updateParticipantStatus(user, status) {
+                // Update participant status in the UI
+                const participants = document.querySelectorAll('.participant-item');
+                participants.forEach(item => {
+                    const nameElement = item.querySelector('.fw-bold');
+                    if (nameElement && nameElement.textContent.includes(user)) {
+                        const statusElement = item.querySelector('.text-muted');
+                        if (statusElement) {
+                            statusElement.textContent = status;
+                        }
+                    }
+                });
+            }
+            
+            showAISuggestion() {
+                const suggestionsPanel = document.querySelector('.suggestions-panel');
+                const newSuggestion = document.createElement('div');
+                newSuggestion.className = 'suggestion-item high';
+                newSuggestion.innerHTML = `
+                    <strong>Optimization Detected:</strong> Consider using iterative approach for better space complexity
+                    <div class="mt-2">
+                        <button class="btn btn-sm btn-outline-primary" onclick="applySuggestion()">Apply Fix</button>
+                        <button class="btn btn-sm btn-outline-secondary">Dismiss</button>
+                    </div>
+                `;
+                suggestionsPanel.insertBefore(newSuggestion, suggestionsPanel.firstChild);
+            }
+            
+            broadcastCodeChange(change) {
+                // Simulate broadcasting code changes
+                console.log('Broadcasting code change:', change);
+            }
+            
+            broadcastCursorMove(position) {
+                // Simulate broadcasting cursor movement
+                console.log('Broadcasting cursor move:', position);
+            }
+            
+            setupEventListeners() {
+                // Set up various event listeners for collaboration features
+            }
+        }
+        
+        // Global functions for UI interactions
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (message) {
+                const chatContainer = document.getElementById('chat-messages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'mb-2';
+                messageDiv.innerHTML = `<strong>You:</strong> ${message}`;
+                chatContainer.appendChild(messageDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                input.value = '';
+            }
+        }
+        
+        function requestHelp() {
+            const helpStatus = document.getElementById('help-status');
+            helpStatus.style.display = 'block';
+            
+            // Simulate help request
+            setTimeout(() => {
+                helpStatus.innerHTML = `
+                    <div class="h6 mb-2">✅ Lecturer Joined</div>
+                    <p class="mb-0">Dr. Smith is now assisting your session</p>
+                `;
+                helpStatus.style.background = 'linear-gradient(135deg, #11998e, #38ef7d)';
+            }, 3000);
+        }
+        
+        function runCode() {
+            alert('Code execution in collaboration mode! 🚀\\n\\nOutput: 55\\nExecution time: 0.023ms');
+        }
+        
+        function applySuggestion() {
+            const editor = document.getElementById('shared-code-editor');
+            editor.value = `def fibonacci(n):
+    # Optimized iterative approach
+    if n <= 1:
+        return n
+    
+    a, b = 0, 1
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    
+    return b
+
+# Much better! O(n) time, O(1) space
+print(fibonacci(10))`;
+            
+            // Add success message to chat
+            const chatContainer = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'mb-2 text-success';
+            messageDiv.innerHTML = '<small><i>✨ AI optimization applied successfully!</i></small>';
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        function leaveSession() {
+            if (confirm('Are you sure you want to leave this collaboration session?')) {
+                window.location.href = '/student-dashboard';
+            }
+        }
+        
+        function shareScreen() {
+            alert('Screen sharing requested! 📺\\n\\nThis would integrate with WebRTC for real screen sharing.');
+        }
+        
+        function recordSession() {
+            alert('Session recording started! 🎥\\n\\nAll changes and interactions will be saved for playback.');
+        }
+        
+        function inviteMore() {
+            const sessionLink = `${window.location.origin}/join-session?id=demo_session_123`;
+            navigator.clipboard.writeText(sessionLink).then(() => {
+                alert('Invitation link copied to clipboard! 📋\\n\\n' + sessionLink);
+            });
+        }
+        
+        // Initialize collaboration workspace
+        let workspace;
+        document.addEventListener('DOMContentLoaded', () => {
+            workspace = new CollaborationWorkspace();
+        });
+    </script>
+    {% endblock %}
+</body>
+</html>

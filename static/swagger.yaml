@@ -1,0 +1,213 @@
+openapi: 3.0.3
+info:
+  title: AI-Powered Grading System API
+  description: |
+    Comprehensive API for automated code grading with AI, plagiarism detection,
+    gamification, and real-time collaboration features.
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@ai-grading.com
+
+servers:
+  - url: http://localhost:5000/api
+    description: Development server
+  - url: https://api.ai-grading.com/api
+    description: Production server
+
+tags:
+  - name: Authentication
+    description: User registration and login
+  - name: Submissions
+    description: Code submission and grading
+  - name: Assignments
+    description: Assignment management
+  - name: Gamification
+    description: Points, badges, and achievements
+  - name: Plagiarism
+    description: Plagiarism detection
+  - name: Collaboration
+    description: Real-time collaboration features
+
+paths:
+  /auth/signup:
+    post:
+      tags: [Authentication]
+      summary: Register new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, email, password, role]
+              properties:
+                username:
+                  type: string
+                  example: john_doe
+                email:
+                  type: string
+                  format: email
+                  example: john@example.com
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+                role:
+                  type: string
+                  enum: [student, lecturer]
+                usn:
+                  type: string
+                  description: Student USN (for students only)
+      responses:
+        '201':
+          description: User created successfully
+        '400':
+          description: Invalid input or user already exists
+
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    type: object
+        '401':
+          description: Invalid credentials
+
+  /submissions/submit:
+    post:
+      tags: [Submissions]
+      summary: Submit code for grading
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [assignment_id, code, programming_language]
+              properties:
+                assignment_id:
+                  type: string
+                code:
+                  type: string
+                  description: Source code to be graded
+                programming_language:
+                  type: string
+                  enum: [python, java, cpp, c, javascript]
+      responses:
+        '200':
+          description: Code graded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  score:
+                    type: number
+                    minimum: 0
+                    maximum: 100
+                  feedback:
+                    type: string
+                  test_results:
+                    type: object
+                  plagiarism_result:
+                    type: object
+
+  /gamification/award-points:
+    post:
+      tags: [Gamification]
+      summary: Award points to user
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                points:
+                  type: integer
+                reason:
+                  type: string
+      responses:
+        '200':
+          description: Points awarded successfully
+
+  /plagiarism/check:
+    post:
+      tags: [Plagiarism]
+      summary: Check code for plagiarism
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                assignment_id:
+                  type: string
+                language:
+                  type: string
+      responses:
+        '200':
+          description: Plagiarism check complete
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_plagiarism:
+                    type: boolean
+                  similarity_score:
+                    type: number
+                  matches:
+                    type: array
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string

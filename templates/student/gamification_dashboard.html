@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamification Dashboard - AI Grading System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <style>
+        .achievement-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .achievement-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .badge-item {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .badge-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        
+        .badge-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-custom {
+            height: 25px;
+            border-radius: 15px;
+            background-color: #e9ecef;
+            overflow: hidden;
+        }
+        
+        .progress-bar-custom {
+            background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+            height: 100%;
+            border-radius: 15px;
+            transition: width 0.6s ease;
+        }
+        
+        .leaderboard-item {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .rank-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .rank-1 { background: linear-gradient(135deg, #ffd700, #ffed4e); color: #333; }
+        .rank-2 { background: linear-gradient(135deg, #c0c0c0, #e8e8e8); color: #333; }
+        .rank-3 { background: linear-gradient(135deg, #cd7f32, #deb887); }
+        .rank-other { background: linear-gradient(135deg, #6c757d, #adb5bd); }
+        
+        .streak-counter {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+        }
+        
+        .streak-number {
+            font-size: 3rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .challenge-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .points-display {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+        }
+        
+        .animation-bounce {
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .level-indicator {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    {% extends "base.html" %}
+    
+    {% block title %}Gamification Dashboard{% endblock %}
+    
+    {% block content %}
+    <div class="container-fluid py-4">
+        <!-- Header Section -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="achievement-card">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="mb-0">🏆 Your Coding Journey</h1>
+                            <p class="mb-0 opacity-75">Track your progress, earn badges, and climb the leaderboard!</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="level-indicator d-inline-block">
+                                <div id="current-level">⭐ Advanced</div>
+                                <small>Level 4</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats Overview -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="points-display">
+                    <div class="h2 mb-1" id="total-points">1,850</div>
+                    <div>Total Points</div>
+                    <small id="points-to-next">1,150 to next level</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="streak-counter">
+                    <div class="streak-number" id="current-streak">12</div>
+                    <div>Day Streak 🔥</div>
+                    <small>Longest: <span id="longest-streak">15</span> days</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="achievement-card text-center">
+                    <div class="h2 mb-1" id="rank-position">#3</div>
+                    <div>Leaderboard Rank</div>
+                    <small>🚀 Moving up!</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="achievement-card text-center">
+                    <div class="h2 mb-1" id="badges-count">8</div>
+                    <div>Badges Earned</div>
+                    <small class="position-relative">
+                        🎯 New available!
+                        <span class="notification-badge">2</span>
+                    </small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Level Progress -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Level Progress</h5>
+                        <div class="progress-custom mb-2">
+                            <div class="progress-bar-custom" id="level-progress" style="width: 62%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <small>Advanced (1,850 pts)</small>
+                            <small>Expert (3,000 pts)</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Badges Section -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">🏅 Your Badges</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="badge-container" id="earned-badges">
+                            <!-- Badges will be loaded here -->
+                        </div>
+                        
+                        <h6 class="mt-4 mb-3">🎯 Next Achievements</h6>
+                        <div id="next-badges">
+                            <!-- Next badges will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Leaderboard Section -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">🏆 Leaderboard</h5>
+                        <select class="form-select form-select-sm" style="width: auto;" id="leaderboard-filter">
+                            <option value="all">All Time</option>
+                            <option value="monthly">This Month</option>
+                            <option value="weekly">This Week</option>
+                        </select>
+                    </div>
+                    <div class="card-body">
+                        <div id="leaderboard-list">
+                            <!-- Leaderboard will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Monthly Challenges -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">🎮 Monthly Challenges</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="monthly-challenges">
+                            <!-- Challenges will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activity -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">📈 Recent Activity</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="recent-activity">
+                            <!-- Recent activity will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Achievement Popup Modal -->
+    <div class="modal fade" id="achievementModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center p-4">
+                    <div class="mb-3">
+                        <div class="badge-icon animation-bounce" id="achievement-icon">🏆</div>
+                    </div>
+                    <h4 id="achievement-title">New Achievement!</h4>
+                    <p id="achievement-description">You've earned a new badge!</p>
+                    <div class="mt-3">
+                        <span class="badge bg-success fs-6" id="achievement-points">+100 Points</span>
+                    </div>
+                    <button type="button" class="btn btn-primary mt-3" data-bs-dismiss="modal">Awesome!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    
+    {% block scripts %}
+    <script>
+        // Gamification Dashboard JavaScript
+        class GamificationDashboard {
+            constructor() {
+                this.apiBase = '/api/gamification';
+                this.init();
+            }
+            
+            async init() {
+                await this.loadUserStats();
+                await this.loadLeaderboard();
+                await this.loadMonthlyChallenges();
+                this.setupEventListeners();
+            }
+            
+            async loadUserStats() {
+                try {
+                    const response = await fetch(`${this.apiBase}/demo/student-profile`);
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        this.renderUserStats(result.data);
+                    }
+                } catch (error) {
+                    console.error('Error loading user stats:', error);
+                }
+            }
+            
+            renderUserStats(data) {
+                // Update overview stats
+                document.getElementById('total-points').textContent = data.stats.total_points.toLocaleString();
+                document.getElementById('current-streak').textContent = data.stats.current_streak;
+                document.getElementById('longest-streak').textContent = data.stats.longest_streak;
+                document.getElementById('rank-position').textContent = `#${data.leaderboard_position}`;
+                document.getElementById('badges-count').textContent = data.stats.badges.length;
+                
+                // Update level info
+                const levelProgress = (data.level.progress_percent || 0);
+                document.getElementById('level-progress').style.width = `${levelProgress}%`;
+                document.getElementById('current-level').textContent = `${data.level.current_level.icon} ${data.level.current_level.name}`;
+                document.getElementById('points-to-next').textContent = data.level.next_level ? 
+                    `${data.level.points_to_next.toLocaleString()} to ${data.level.next_level.name}` : 
+                    'Max level reached!';
+                
+                // Render badges
+                this.renderBadges(data.stats.badges, data.stats.next_badges);
+                
+                // Render recent activity
+                this.renderRecentActivity(data.recent_achievements);
+            }
+            
+            renderBadges(earnedBadges, nextBadges) {
+                const earnedContainer = document.getElementById('earned-badges');
+                earnedContainer.innerHTML = '';
+                
+                earnedBadges.forEach(badge => {
+                    const badgeElement = document.createElement('div');
+                    badgeElement.className = 'badge-item';
+                    badgeElement.innerHTML = `
+                        <div class="badge-icon">${badge.config.icon}</div>
+                        <div class="fw-bold">${badge.config.name}</div>
+                        <small class="text-muted">${badge.config.description}</small>
+                        <div class="text-success mt-1">+${badge.config.points} pts</div>
+                    `;
+                    earnedContainer.appendChild(badgeElement);
+                });
+                
+                // Render next badges
+                const nextContainer = document.getElementById('next-badges');
+                nextContainer.innerHTML = '';
+                
+                nextBadges.forEach(badge => {
+                    const progress = Math.round((badge.progress / badge.required) * 100);
+                    const badgeElement = document.createElement('div');
+                    badgeElement.className = 'border rounded p-3 mb-2';
+                    badgeElement.innerHTML = `
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="fs-3">${badge.config.icon}</div>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold">${badge.config.name}</div>
+                                <small class="text-muted">${badge.config.description}</small>
+                                <div class="progress mt-2" style="height: 8px;">
+                                    <div class="progress-bar" style="width: ${progress}%"></div>
+                                </div>
+                                <small>${badge.progress}/${badge.required}</small>
+                            </div>
+                        </div>
+                    `;
+                    nextContainer.appendChild(badgeElement);
+                });
+            }
+            
+            async loadLeaderboard() {
+                try {
+                    const response = await fetch(`${this.apiBase}/leaderboard`);
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        this.renderLeaderboard(result.data.leaderboard);
+                    }
+                } catch (error) {
+                    console.error('Error loading leaderboard:', error);
+                }
+            }
+            
+            renderLeaderboard(leaderboard) {
+                const container = document.getElementById('leaderboard-list');
+                container.innerHTML = '';
+                
+                leaderboard.forEach((user, index) => {
+                    const rank = index + 1;
+                    const rankClass = rank === 1 ? 'rank-1' : rank === 2 ? 'rank-2' : rank === 3 ? 'rank-3' : 'rank-other';
+                    
+                    const userElement = document.createElement('div');
+                    userElement.className = 'leaderboard-item';
+                    userElement.innerHTML = `
+                        <div class="rank-badge ${rankClass}">${rank}</div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold">${user.username}</div>
+                            <small class="text-muted">${user.total_points.toLocaleString()} points • ${user.badges_count} badges</small>
+                        </div>
+                        <div class="text-end">
+                            <div class="text-warning">🔥 ${user.current_streak}</div>
+                            <small>streak</small>
+                        </div>
+                    `;
+                    container.appendChild(userElement);
+                });
+            }
+            
+            async loadMonthlyChallenges() {
+                try {
+                    const response = await fetch(`${this.apiBase}/challenges/monthly`);
+                    const result = await response.json();
+                    
+                    if (result.status === 'success') {
+                        this.renderMonthlyChallenges(result.data.challenges);
+                    }
+                } catch (error) {
+                    console.error('Error loading challenges:', error);
+                }
+            }
+            
+            renderMonthlyChallenges(challenges) {
+                const container = document.getElementById('monthly-challenges');
+                container.innerHTML = '';
+                
+                challenges.forEach(challenge => {
+                    const challengeElement = document.createElement('div');
+                    challengeElement.className = 'col-md-6 mb-3';
+                    challengeElement.innerHTML = `
+                        <div class="challenge-card">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="fs-2">${challenge.config.icon}</div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">${challenge.config.name}</h6>
+                                    <p class="mb-2 opacity-75">${challenge.config.description}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="badge bg-light text-dark">+${challenge.config.points} pts</span>
+                                        <small>Ends Oct 30</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(challengeElement);
+                });
+            }
+            
+            renderRecentActivity(activities) {
+                const container = document.getElementById('recent-activity');
+                container.innerHTML = '';
+                
+                activities.forEach(activity => {
+                    const activityElement = document.createElement('div');
+                    activityElement.className = 'd-flex align-items-center gap-3 p-3 border-bottom';
+                    
+                    if (activity.type === 'badge') {
+                        activityElement.innerHTML = `
+                            <div class="fs-4">${activity.badge.icon}</div>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold">Badge Earned: ${activity.badge.name}</div>
+                                <small class="text-muted">${activity.badge.description}</small>
+                            </div>
+                            <div class="text-end">
+                                <div class="text-success">+${activity.badge.points} pts</div>
+                                <small class="text-muted">2 days ago</small>
+                            </div>
+                        `;
+                    } else {
+                        activityElement.innerHTML = `
+                            <div class="fs-4">💰</div>
+                            <div class="flex-grow-1">
+                                <div class="fw-bold">Points Earned</div>
+                                <small class="text-muted">${activity.reason}</small>
+                            </div>
+                            <div class="text-end">
+                                <div class="text-success">+${activity.amount} pts</div>
+                                <small class="text-muted">Today</small>
+                            </div>
+                        `;
+                    }
+                    
+                    container.appendChild(activityElement);
+                });
+            }
+            
+            setupEventListeners() {
+                // Leaderboard filter
+                document.getElementById('leaderboard-filter').addEventListener('change', (e) => {
+                    this.loadLeaderboard(e.target.value);
+                });
+                
+                // Simulate earning achievement for demo
+                setTimeout(() => {
+                    this.showAchievementNotification({
+                        icon: '🔥',
+                        name: 'Week Warrior',
+                        description: '7-day submission streak!',
+                        points: 250
+                    });
+                }, 2000);
+            }
+            
+            showAchievementNotification(achievement) {
+                document.getElementById('achievement-icon').textContent = achievement.icon;
+                document.getElementById('achievement-title').textContent = achievement.name;
+                document.getElementById('achievement-description').textContent = achievement.description;
+                document.getElementById('achievement-points').textContent = `+${achievement.points} Points`;
+                
+                const modal = new bootstrap.Modal(document.getElementById('achievementModal'));
+                modal.show();
+            }
+        }
+        
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new GamificationDashboard();
+        });
+    </script>
+    {% endblock %}
+</body>
+</html>

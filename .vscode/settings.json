@@ -1,0 +1,47 @@
+{
+    "python.defaultInterpreterPath": "./venv/Scripts/python.exe",
+    "python.terminal.activateEnvironment": true,
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.formatting.provider": "black",
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "files.associations": {
+        "*.html": "html",
+        "*.md": "markdown",
+        "*.json": "jsonc"
+    },
+    "emmet.includeLanguages": {
+        "jinja-html": "html",
+        "html": "html"
+    },
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/*.pyc": true,
+        "**/venv": false,
+        "**/.pytest_cache": true
+    },
+    "python.envFile": "${workspaceFolder}/.env",
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "html.format.indentInnerHtml": true,
+    "html.format.templating": true,
+    "html.suggest.html5": true,
+    "css.validate": true,
+    "javascript.validate.enable": true,
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#2D3748",
+        "activityBar.foreground": "#E2E8F0"
+    },
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true
+}

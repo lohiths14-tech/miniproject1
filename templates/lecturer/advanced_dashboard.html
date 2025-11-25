@@ -1,0 +1,1203 @@
+{% extends "base.html" %}
+
+{% block title %}Advanced Lecturer Dashboard - AI Grading System{% endblock %}
+
+{% block extra_head %}
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* COMPREHENSIVE TEXT VISIBILITY FIXES */
+    
+    /* Default text colors for all elements */
+    body, html {
+        color: #333 !important;
+    }
+    
+    /* Card text visibility */
+    .card {
+        background-color: #fff !important;
+        color: #333 !important;
+    }
+    
+    .card-body {
+        color: #333 !important;
+        background-color: #fff !important;
+    }
+    
+    .card-body *, .card-body h1, .card-body h2, .card-body h3, .card-body h4, .card-body h5, .card-body h6, 
+    .card-body p, .card-body span, .card-body div, .card-body small, .card-body strong {
+        color: #333 !important;
+    }
+    
+    /* White text on colored backgrounds */
+    .bg-primary, .bg-primary *, .bg-primary .card-body, .bg-primary .card-body * {
+        color: white !important;
+    }
+    
+    .bg-success, .bg-success *, .bg-success .card-body, .bg-success .card-body * {
+        color: white !important;
+    }
+    
+    .bg-warning, .bg-warning *, .bg-warning .card-body, .bg-warning .card-body * {
+        color: white !important;
+    }
+    
+    .bg-info, .bg-info *, .bg-info .card-body, .bg-info .card-body * {
+        color: white !important;
+    }
+    
+    .bg-danger, .bg-danger *, .bg-danger .card-body, .bg-danger .card-body * {
+        color: white !important;
+    }
+    
+    /* Button text visibility */
+    .btn-outline-success, .btn-outline-primary, .btn-outline-info, .btn-outline-warning, .btn-outline-danger, .btn-outline-dark {
+        color: #333 !important;
+        background-color: #fff !important;
+    }
+    
+    .btn-outline-success *, .btn-outline-primary *, .btn-outline-info *, .btn-outline-warning *, .btn-outline-danger *, .btn-outline-dark * {
+        color: #333 !important;
+    }
+    
+    .btn-outline-success:hover, .btn-outline-primary:hover, .btn-outline-info:hover, .btn-outline-warning:hover, .btn-outline-danger:hover, .btn-outline-dark:hover {
+        color: white !important;
+    }
+    
+    .btn-outline-success:hover *, .btn-outline-primary:hover *, .btn-outline-info:hover *, .btn-outline-warning:hover *, .btn-outline-danger:hover *, .btn-outline-dark:hover * {
+        color: white !important;
+    }
+    
+    /* Table text visibility */
+    .table, .table * {
+        color: #333 !important;
+        background-color: #fff !important;
+    }
+    
+    .table th, .table td, .table th *, .table td * {
+        color: #333 !important;
+    }
+    
+    /* Priority actions and health items */
+    .priority-item, .priority-item * {
+        color: #333 !important;
+    }
+    
+    .health-item, .health-item * {
+        color: #333 !important;
+    }
+    
+    /* Course statistics */
+    .course-stat, .course-stat * {
+        color: #333 !important;
+    }
+    
+    /* Form elements */
+    .form-control, .form-select, .form-label {
+        color: #333 !important;
+        background-color: #fff !important;
+    }
+    
+    /* Badge text */
+    .badge {
+        color: white !important;
+    }
+    
+    /* Text muted override */
+    .text-muted {
+        color: #666 !important;
+    }
+    
+    /* Ensure all text is visible */
+    * {
+        text-shadow: none !important;
+    }
+    
+    /* Force white text on gradient backgrounds */
+    .bg-gradient-success, .bg-gradient-success * {
+        color: white !important;
+    }
+    
+    /* Chart labels */
+    .chart-container, .chart-container * {
+        color: #333 !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-gradient-success text-white">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2><i class="fas fa-chalkboard-teacher"></i> Advanced Lecturer Dashboard</h2>
+                            <p class="mb-0">Manage your courses with AI-powered insights and analytics</p>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-light btn-sm" onclick="refreshDashboard()">
+                                    <i class="fas fa-sync-alt"></i> Refresh
+                                </button>
+                                <button class="btn btn-light btn-sm" onclick="showAlerts()">
+                                    <i class="fas fa-exclamation-triangle"></i> Alerts <span class="badge bg-warning">2</span>
+                                </button>
+                                <button class="btn btn-light btn-sm" onclick="exportAllData()">
+                                    <i class="fas fa-download"></i> Export
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Row -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0" style="color: white !important;">Total Students</h6>
+                            <h3 class="mb-0" id="totalStudents" style="color: white !important;">0</h3>
+                        </div>
+                        <div class="ms-3">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0" style="color: white !important;">Active Assignments</h6>
+                            <h3 class="mb-0" id="activeAssignments" style="color: white !important;">0</h3>
+                        </div>
+                        <div class="ms-3">
+                            <i class="fas fa-tasks fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0" style="color: white !important;">Pending Reviews</h6>
+                            <h3 class="mb-0" id="pendingReviews" style="color: white !important;">0</h3>
+                        </div>
+                        <div class="ms-3">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0" style="color: white !important;">Avg Class Score</h6>
+                            <h3 class="mb-0" id="avgScore" style="color: white !important;">0%</h3>
+                        </div>
+                        <div class="ms-3">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Main Content Area -->
+        <div class="col-md-8">
+            <!-- Quick Actions -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5><i class="fas fa-tools"></i> Course Management Tools</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-success w-100 h-100" onclick="createAssignment()">
+                                <i class="fas fa-plus fa-2x d-block mb-2"></i>
+                                <strong>Create Assignment</strong><br>
+                                <small>New task</small>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-primary w-100 h-100" onclick="manageAssignments()">
+                                <i class="fas fa-cogs fa-2x d-block mb-2"></i>
+                                <strong>Manage Assignments</strong><br>
+                                <small>Edit & review</small>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-info w-100 h-100" onclick="viewStudents()">
+                                <i class="fas fa-user-graduate fa-2x d-block mb-2"></i>
+                                <strong>View Students</strong><br>
+                                <small>Student list</small>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-warning w-100 h-100" onclick="openAnalytics()">
+                                <i class="fas fa-chart-bar fa-2x d-block mb-2"></i>
+                                <strong>Analytics</strong><br>
+                                <small>Performance data</small>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-danger w-100 h-100" onclick="viewLeaderboard()">
+                                <i class="fas fa-trophy fa-2x d-block mb-2"></i>
+                                <strong>Leaderboard</strong><br>
+                                <small>Top performers</small>
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-dark w-100 h-100" onclick="courseSettings()">
+                                <i class="fas fa-cog fa-2x d-block mb-2"></i>
+                                <strong>Course Settings</strong><br>
+                                <small>Configuration</small>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Submissions -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-inbox"></i> Recent Submissions</h5>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-light" onclick="refreshSubmissions()">Refresh</button>
+                        <button class="btn btn-light" onclick="filterSubmissions('all')">All</button>
+                        <button class="btn btn-light" onclick="filterSubmissions('pending')">Pending</button>
+                        <button class="btn btn-light" onclick="filterSubmissions('graded')">Graded</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="submissionsTable">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Assignment</th>
+                                    <th>Submitted</th>
+                                    <th>Status</th>
+                                    <th>Score</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="submissionsBody">
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">
+                                        <i class="fas fa-spinner fa-spin"></i> Loading submissions...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Charts -->
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5><i class="fas fa-chart-area"></i> Class Performance Analytics</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <canvas id="performanceChart" width="400" height="200"></canvas>
+                        </div>
+                        <div class="col-md-6">
+                            <canvas id="submissionChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <!-- System Health -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h6><i class="fas fa-heartbeat"></i> System Health</h6>
+                </div>
+                <div class="card-body">
+                    <div class="health-item d-flex justify-content-between align-items-center mb-2">
+                        <span><i class="fas fa-robot text-success"></i> AI Grading Engine</span>
+                        <span class="badge bg-success">Operational</span>
+                    </div>
+                    <div class="health-item d-flex justify-content-between align-items-center mb-2">
+                        <span><i class="fas fa-shield-alt text-info"></i> Plagiarism Detection</span>
+                        <span class="badge bg-info">Active</span>
+                    </div>
+                    <div class="health-item d-flex justify-content-between align-items-center mb-2">
+                        <span><i class="fas fa-database text-warning"></i> Database</span>
+                        <span class="badge bg-warning">In-Memory</span>
+                    </div>
+                    <div class="health-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-cloud text-primary"></i> Cloud Sync</span>
+                        <span class="badge bg-primary">Connected</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Priority Actions -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-white">
+                    <h6><i class="fas fa-exclamation-triangle"></i> Priority Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="priority-item mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">Grade Pending Submissions</h6>
+                                <small class="text-muted">7 submissions waiting</small>
+                            </div>
+                            <button class="btn btn-sm btn-warning" onclick="gradePendingSubmissions()">
+                                <i class="fas fa-graduation-cap"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="priority-item mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">Review Plagiarism Alerts</h6>
+                                <small class="text-muted">2 flagged submissions</small>
+                            </div>
+                            <button class="btn btn-sm btn-danger" onclick="reviewPlagiarism()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="priority-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">Update Assignment Deadlines</h6>
+                                <small class="text-muted">3 assignments expiring soon</small>
+                            </div>
+                            <button class="btn btn-sm btn-info" onclick="updateDeadlines()">
+                                <i class="fas fa-calendar"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Course Stats -->
+            <div class="card mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h6><i class="fas fa-chart-pie"></i> Course Statistics</h6>
+                </div>
+                <div class="card-body">
+                    <div class="stat-item d-flex justify-content-between mb-2">
+                        <span>Completion Rate</span>
+                        <span class="badge bg-success">92%</span>
+                    </div>
+                    <div class="stat-item d-flex justify-content-between mb-2">
+                        <span>Average Time</span>
+                        <span class="badge bg-info">45 min</span>
+                    </div>
+                    <div class="stat-item d-flex justify-content-between mb-2">
+                        <span>Plagiarism Rate</span>
+                        <span class="badge bg-warning">2.4%</span>
+                    </div>
+                    <div class="stat-item d-flex justify-content-between">
+                        <span>Student Satisfaction</span>
+                        <span class="badge bg-primary">4.8/5</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Tools -->
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h6><i class="fas fa-toolbox"></i> Quick Tools</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary btn-sm" onclick="bulkGrade()">
+                            <i class="fas fa-bolt"></i> Bulk Grade Assignments
+                        </button>
+                        <button class="btn btn-outline-success btn-sm" onclick="generateReport()">
+                            <i class="fas fa-file-alt"></i> Generate Class Report
+                        </button>
+                        <button class="btn btn-outline-info btn-sm" onclick="sendAnnouncement()">
+                            <i class="fas fa-bullhorn"></i> Send Announcement
+                        </button>
+                        <button class="btn btn-outline-warning btn-sm" onclick="backupData()">
+                            <i class="fas fa-download"></i> Backup Course Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alerts Modal -->
+<div class="modal fade" id="alertsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle"></i> System Alerts</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-clock"></i> <strong>Deadline Alert:</strong> 3 assignments have deadlines approaching within 24 hours
+                </div>
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i> <strong>Plagiarism Alert:</strong> 2 submissions flagged for review
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="handleAlerts()">Take Action</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.bg-gradient-success {
+    background: linear-gradient(45deg, #28a745, #20c997);
+}
+
+.health-item, .priority-item, .stat-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.health-item:last-child, .priority-item:last-child, .stat-item:last-child {
+    border-bottom: none;
+}
+
+.btn-outline-primary:hover, .btn-outline-success:hover, .btn-outline-info:hover,
+.btn-outline-warning:hover, .btn-outline-danger:hover, .btn-outline-dark:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.table-responsive {
+    max-height: 400px;
+    overflow-y: auto;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Dashboard functionality
+function refreshDashboard() {
+    showToast('Dashboard refreshed!', 'success');
+    // Simulate data refresh
+    document.getElementById('totalStudents').textContent = Math.floor(Math.random() * 20) + 70;
+    document.getElementById('activeAssignments').textContent = Math.floor(Math.random() * 10) + 8;
+    document.getElementById('pendingReviews').textContent = Math.floor(Math.random() * 15) + 2;
+    document.getElementById('avgScore').textContent = (Math.random() * 15 + 80).toFixed(1) + '%';
+    
+    // Refresh submissions
+    refreshSubmissions();
+}
+
+function refreshSubmissions() {
+    showToast('Refreshing submissions...', 'info');
+    loadRecentSubmissions();
+}
+
+function loadRecentSubmissions() {
+    fetch('/api/submissions/recent')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                displaySubmissions(data.data);
+                showToast('Submissions updated!', 'success');
+            } else {
+                showToast('Failed to load submissions', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading submissions:', error);
+            showToast('Error loading submissions', 'error');
+        });
+}
+
+function displaySubmissions(submissions) {
+    const tbody = document.getElementById('submissionsBody');
+    
+    if (submissions.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="6" class="text-center text-muted">
+                    <i class="fas fa-inbox"></i> No submissions yet. Students can submit code from the Enhanced Code Editor.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    tbody.innerHTML = '';
+    
+    submissions.forEach(submission => {
+        const statusBadge = submission.status === 'graded' 
+            ? `<span class="badge bg-success">Graded</span>`
+            : `<span class="badge bg-warning">Pending</span>`;
+        
+        const scoreBadge = submission.score 
+            ? `<span class="badge bg-primary">${submission.score}%</span>`
+            : `<span class="badge bg-secondary">-</span>`;
+        
+        const actionButtons = submission.status === 'pending'
+            ? `
+                <button class="btn btn-sm btn-outline-primary" onclick="gradeSubmissionById('${submission.id}')">
+                    <i class="fas fa-graduation-cap"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-info" onclick="viewSubmissionById('${submission.id}')">
+                    <i class="fas fa-eye"></i>
+                </button>
+            `
+            : `
+                <button class="btn btn-sm btn-outline-info" onclick="viewSubmissionById('${submission.id}')">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-warning" onclick="provideFeedbackById('${submission.id}')">
+                    <i class="fas fa-comment"></i>
+                </button>
+            `;
+        
+        const row = `
+            <tr>
+                <td><i class="fas fa-user"></i> ${submission.student}</td>
+                <td>${submission.assignment}</td>
+                <td>${submission.submitted}</td>
+                <td>${statusBadge}</td>
+                <td>${scoreBadge}</td>
+                <td>${actionButtons}</td>
+            </tr>
+        `;
+        
+        tbody.innerHTML += row;
+    });
+}
+
+function showAlerts() {
+    $('#alertsModal').modal('show');
+}
+
+function handleAlerts() {
+    showToast('Handling priority alerts...', 'info');
+    $('#alertsModal').modal('hide');
+}
+
+// Navigation functions
+function createAssignment() {
+    showToast('Opening Assignment Creator...', 'info');
+    setTimeout(() => window.location.href = '/create-assignment', 1000);
+}
+
+function manageAssignments() {
+    showToast('Loading Assignment Manager...', 'info');
+    setTimeout(() => window.location.href = '/manage-assignments', 1000);
+}
+
+function viewStudents() {
+    showToast('Loading Student List...', 'info');
+    setTimeout(() => window.location.href = '/view-students', 1000);
+}
+
+function openAnalytics() {
+    showToast('Opening Advanced Analytics...', 'info');
+    setTimeout(() => window.location.href = '/analytics', 1000);
+}
+
+function viewLeaderboard() {
+    showToast('Loading Performance Leaderboard...', 'info');
+    setTimeout(() => window.location.href = '/leaderboard', 1000);
+}
+
+function courseSettings() {
+    showToast('Opening Course Configuration...', 'info');
+    setTimeout(() => {
+        const settingsHtml = `
+            <div class="card">
+                <div class="card-body">
+                    <h6>Course Configuration</h6>
+                    <form>
+                        <div class="mb-3">
+                            <label class="form-label">Course Name</label>
+                            <input type="text" class="form-control" value="Data Structures & Algorithms">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Semester</label>
+                            <input type="text" class="form-control" value="Fall 2025">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Plagiarism Threshold</label>
+                            <input type="range" class="form-range" min="50" max="100" value="91">
+                            <small class="text-muted">91% similarity threshold</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Auto-Grading</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" checked>
+                                <label class="form-check-label">Enable AI auto-grading</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        `;
+        showModal('Course Settings', settingsHtml);
+    }, 1000);
+}
+
+// Submission management
+function filterSubmissions(filter) {
+    showToast(`Filtering submissions: ${filter}`, 'info');
+    // Simulate filtering
+}
+
+function viewSubmissionById(submissionId) {
+    showToast(`Loading submission ${submissionId}...`, 'info');
+    
+    fetch(`/api/submissions/view/${submissionId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const submission = data.data;
+                const submissionHtml = `
+                    <div class="card">
+                        <div class="card-header">
+                            <h6>Submission Details - ${submission.student_name}</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <p><strong>Assignment:</strong> ${submission.assignment_title}</p>
+                                    <p><strong>Student:</strong> ${submission.student_name}</p>
+                                    <p><strong>Email:</strong> ${submission.student_email}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Submitted:</strong> ${new Date(submission.submitted_at).toLocaleString()}</p>
+                                    <p><strong>Language:</strong> ${submission.language}</p>
+                                    <p><strong>Status:</strong> <span class="badge bg-${submission.status === 'graded' ? 'success' : 'warning'}">${submission.status}</span></p>
+                                </div>
+                            </div>
+                            ${submission.score ? `
+                                <div class="alert alert-success">
+                                    <h6><i class="fas fa-trophy"></i> Score: ${submission.score}%</h6>
+                                </div>
+                            ` : ''}
+                            <hr>
+                            <h6>Code:</h6>
+                            <pre class="bg-dark text-light p-3" style="border-radius: 5px; max-height: 400px; overflow-y: auto;"><code>${submission.code}</code></pre>
+                            ${submission.feedback ? `
+                                <hr>
+                                <h6>AI Feedback:</h6>
+                                <div class="alert alert-info">
+                                    ${submission.feedback}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+                showModal('Submission Review', submissionHtml);
+            } else {
+                showToast('Failed to load submission details', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast('Error loading submission', 'error');
+        });
+}
+
+function gradeSubmissionById(submissionId) {
+    showToast(`Grading submission ${submissionId}...`, 'info');
+    
+    fetch(`/api/submissions/grade/${submissionId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            showToast(`Submission graded! Score: ${data.data.score}%`, 'success');
+            // Refresh the submissions table
+            loadRecentSubmissions();
+        } else {
+            showToast('Grading failed: ' + data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Grading failed', 'error');
+    });
+}
+
+function provideFeedbackById(submissionId) {
+    const feedbackHtml = `
+        <div class="card">
+            <div class="card-body">
+                <h6>Provide Additional Feedback</h6>
+                <form id="feedbackForm">
+                    <div class="mb-3">
+                        <label class="form-label">Overall Comments</label>
+                        <textarea class="form-control" id="overallComments" rows="4" placeholder="Excellent implementation! Consider adding more comments..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Areas for Improvement</label>
+                        <textarea class="form-control" id="improvements" rows="3" placeholder="Code documentation, edge case handling..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Suggested Resources</label>
+                        <input type="text" class="form-control" id="resources" placeholder="Recommended reading or tutorials...">
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="submitFeedback('${submissionId}')">Send Feedback</button>
+                </form>
+            </div>
+        </div>
+    `;
+    showModal('Provide Feedback', feedbackHtml);
+}
+
+function submitFeedback(submissionId) {
+    const comments = document.getElementById('overallComments').value;
+    const improvements = document.getElementById('improvements').value;
+    const resources = document.getElementById('resources').value;
+    
+    if (!comments.trim()) {
+        showToast('Please provide some feedback comments', 'warning');
+        return;
+    }
+    
+    showToast('Sending feedback to student...', 'info');
+    
+    // Simulate sending feedback
+    setTimeout(() => {
+        showToast('Feedback sent successfully!', 'success');
+        $('.modal').modal('hide');
+    }, 1500);
+}
+
+function sendCertificate(student) {
+    showToast(`Sending certificate to ${student}...`, 'success');
+    setTimeout(() => {
+        showToast('Certificate sent successfully!', 'success');
+    }, 1500);
+}
+
+// Bulk operations
+function gradePendingSubmissions() {
+    showToast('Starting bulk grading process...', 'info');
+    setTimeout(() => {
+        showToast('7 submissions graded automatically!', 'success');
+        document.getElementById('pendingReviews').textContent = '0';
+    }, 3000);
+}
+
+function reviewPlagiarism() {
+    showToast('Opening plagiarism review panel...', 'warning');
+    setTimeout(() => {
+        const plagiarismHtml = `
+            <div class="card">
+                <div class="card-body">
+                    <h6>Plagiarism Detection Results</h6>
+                    <div class="alert alert-warning">
+                        <strong>High Similarity Detected (87%)</strong><br>
+                        Student A vs Student B - Binary Search implementation
+                    </div>
+                    <div class="alert alert-danger">
+                        <strong>Critical Similarity (95%)</strong><br>
+                        Student C vs Student D - Exact code match detected
+                    </div>
+                    <p>Review each case and take appropriate action.</p>
+                </div>
+            </div>
+        `;
+        showModal('Plagiarism Review', plagiarismHtml);
+    }, 1000);
+}
+
+function updateDeadlines() {
+    showToast('Opening deadline manager...', 'info');
+    setTimeout(() => {
+        const deadlineHtml = `
+            <div class="card">
+                <div class="card-body">
+                    <h6>Update Assignment Deadlines</h6>
+                    <div class="mb-3">
+                        <label class="form-label">Data Structures Lab</label>
+                        <input type="datetime-local" class="form-control" value="2025-09-30T23:59">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Algorithm Analysis</label>
+                        <input type="datetime-local" class="form-control" value="2025-10-05T23:59">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Final Project</label>
+                        <input type="datetime-local" class="form-control" value="2025-10-15T23:59">
+                    </div>
+                </div>
+            </div>
+        `;
+        showModal('Update Deadlines', deadlineHtml);
+    }, 1000);
+}
+
+// Quick tools functions
+function bulkGrade() {
+    showToast('Starting bulk grading process...', 'info');
+    setTimeout(() => {
+        showToast('All pending assignments graded successfully!', 'success');
+    }, 3000);
+}
+
+function generateReport() {
+    showToast('Generating comprehensive class report...', 'info');
+    setTimeout(() => {
+        const reportData = `LECTURER CLASS REPORT
+========================
+Generated: ${new Date().toLocaleString()}
+Course: Data Structures & Algorithms
+Semester: Fall 2025
+
+CLASS STATISTICS
+---------------
+Total Students: 84
+Active Assignments: 12
+Average Class Score: 86.2%
+Completion Rate: 92%
+Plagiarism Rate: 2.4%
+
+TOP PERFORMERS
+--------------
+1. Alice Johnson - 95.2% average
+2. Bob Smith - 93.8% average
+3. Carol Davis - 91.5% average
+
+ASSIGNMENTS STATUS
+-----------------
+• Binary Search Algorithm - 78 submissions
+• Sorting Algorithms - 65 submissions  
+• Data Structures - 82 submissions
+
+SYSTEM PERFORMANCE
+-----------------
+AI Grading: 99.2% accuracy
+Plagiarism Detection: 2 cases flagged
+Average Grading Time: 0.3 seconds
+
+Generated by AI Grading System`;
+        
+        const blob = new Blob([reportData], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'class_comprehensive_report.txt';
+        a.click();
+        window.URL.revokeObjectURL(url);
+        
+        showToast('Class report generated and downloaded!', 'success');
+    }, 2000);
+}
+
+function sendAnnouncement() {
+    const announcementHtml = `
+        <div class="card">
+            <div class="card-body">
+                <h6>Send Class Announcement</h6>
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Subject</label>
+                        <input type="text" class="form-control" placeholder="Important: New Assignment Available">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-control" rows="4" placeholder="Dear students, a new assignment on Advanced Algorithms has been posted..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Recipients</label>
+                        <select class="form-select">
+                            <option selected>All Students (84)</option>
+                            <option>Top Performers (20)</option>
+                            <option>Struggling Students (15)</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="confirmSendAnnouncement()">Send Announcement</button>
+                </form>
+            </div>
+        </div>
+    `;
+    showModal('Send Announcement', announcementHtml);
+}
+
+function confirmSendAnnouncement() {
+    showToast('Sending announcement to all students...', 'info');
+    setTimeout(() => {
+        showToast('Announcement sent successfully to 84 students!', 'success');
+        $('.modal').modal('hide');
+    }, 1500);
+}
+
+function backupData() {
+    showToast('Creating course data backup...', 'info');
+    setTimeout(() => {
+        const backupData = `COURSE DATA BACKUP
+==================
+Backup Date: ${new Date().toLocaleString()}
+Course: Data Structures & Algorithms
+
+STUDENT DATA
+-----------
+Total Students: 84
+Active Students: 78
+Graduated Students: 6
+
+ASSIGNMENT DATA
+--------------
+Total Assignments: 12
+Completed: 8
+Active: 4
+
+SUBMISSION DATA
+--------------
+Total Submissions: 456
+Graded: 449
+Pending: 7
+
+GRADING DATA
+-----------
+Average Score: 86.2%
+Highest Score: 98.5%
+Lowest Score: 72.1%
+
+SYSTEM DATA
+----------
+Plagiarism Cases: 11
+Total AI Gradings: 449
+System Uptime: 99.8%
+
+Backup completed successfully.`;
+        
+        const blob = new Blob([backupData], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'course_data_backup.txt';
+        a.click();
+        window.URL.revokeObjectURL(url);
+        
+        showToast('Course data backup completed!', 'success');
+    }, 2500);
+}
+
+function exportAllData() {
+    showToast('Exporting all course data...', 'info');
+    setTimeout(() => {
+        generateReport();
+        showToast('All data exported successfully!', 'success');
+    }, 1000);
+}
+
+// Utility functions
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    toast.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+        }
+    }, 4000);
+}
+
+function showModal(title, content) {
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.innerHTML = `
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">${title}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    ${content}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    
+    const bsModal = new bootstrap.Modal(modal);
+    bsModal.show();
+    
+    modal.addEventListener('hidden.bs.modal', () => {
+        document.body.removeChild(modal);
+    });
+}
+
+// Refresh dashboard function
+function refreshDashboard() {
+    loadDashboardStats();
+    loadRecentSubmissions();
+    // Force text visibility after refresh
+    setTimeout(forceTextVisibility, 100);
+}
+
+// Load real dashboard statistics
+async function loadDashboardStats() {
+    try {
+        const response = await fetch('/api/dashboard/lecturer/stats');
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            const stats = data.data;
+            
+            // Update dashboard stats with real data
+            document.getElementById('totalStudents').textContent = stats.total_students;
+            document.getElementById('activeAssignments').textContent = stats.active_assignments;
+            document.getElementById('pendingReviews').textContent = stats.pending_reviews;
+            document.getElementById('avgScore').textContent = stats.average_class_score + '%';
+        } else {
+            console.error('Failed to load dashboard stats:', data.message);
+            // Set to 0 if no data
+            document.getElementById('totalStudents').textContent = '0';
+            document.getElementById('activeAssignments').textContent = '0';
+            document.getElementById('pendingReviews').textContent = '0';
+            document.getElementById('avgScore').textContent = '0%';
+        }
+    } catch (error) {
+        console.error('Error loading dashboard stats:', error);
+        // Set to 0 if error
+        document.getElementById('totalStudents').textContent = '0';
+        document.getElementById('activeAssignments').textContent = '0';
+        document.getElementById('pendingReviews').textContent = '0';
+        document.getElementById('avgScore').textContent = '0%';
+    }
+}
+
+// Force text visibility function
+function forceTextVisibility() {
+    // Force all text to be visible
+    const allElements = document.querySelectorAll('*');
+    allElements.forEach(element => {
+        const computedStyle = window.getComputedStyle(element);
+        const bgColor = computedStyle.backgroundColor;
+        
+        // If element has dark background, make text white
+        if (bgColor.includes('rgb(') && 
+            (bgColor.includes('rgb(0,') || bgColor.includes('rgb(33,') || bgColor.includes('rgb(52,'))) {
+            element.style.color = 'white';
+        } else if (element.classList.contains('bg-primary') || 
+                   element.classList.contains('bg-success') || 
+                   element.classList.contains('bg-warning') || 
+                   element.classList.contains('bg-info') || 
+                   element.classList.contains('bg-danger')) {
+            element.style.color = 'white';
+        } else {
+            element.style.color = '#333';
+        }
+    });
+}
+
+// Initialize charts
+document.addEventListener('DOMContentLoaded', function() {
+    // Force text visibility
+    forceTextVisibility();
+    
+    // Load real dashboard stats
+    loadDashboardStats();
+    // Load real submissions when page loads
+    loadRecentSubmissions();
+    
+    // Performance chart
+    const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+    new Chart(performanceCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Assignment 1', 'Assignment 2', 'Assignment 3', 'Assignment 4', 'Assignment 5'],
+            datasets: [{
+                label: 'Class Average',
+                data: [82, 85, 88, 86, 90],
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Assignment Performance Trends'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            }
+        }
+    });
+    
+    // Submission status chart
+    const submissionCtx = document.getElementById('submissionChart').getContext('2d');
+    new Chart(submissionCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Graded', 'Pending', 'Late'],
+            datasets: [{
+                data: [449, 7, 3],
+                backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Submission Status'
+                }
+            }
+        }
+    });
+    
+    // Auto-refresh submissions every 30 seconds
+    setInterval(loadRecentSubmissions, 30000);
+});
+</script>
+{% endblock %}

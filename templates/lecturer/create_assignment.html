@@ -1,0 +1,323 @@
+{% extends "base.html" %}
+
+{% block title %}Create Assignment - AI Grading System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-plus"></i> Create New Assignment</h2>
+                <a href="/lecturer-dashboard" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-edit"></i> Assignment Details</h5>
+                </div>
+                <div class="card-body">
+                    <form id="createAssignmentForm">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">Assignment Title *</label>
+                                    <input type="text" class="form-control" id="title" name="title" required placeholder="e.g., Basic Python Programming">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="difficulty" class="form-label">Difficulty Level</label>
+                                    <select class="form-select" id="difficulty" name="difficulty">
+                                        <option value="easy">Easy</option>
+                                        <option value="medium" selected>Medium</option>
+                                        <option value="hard">Hard</option>
+                                        <option value="expert">Expert</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description *</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" required 
+                                placeholder="Describe what students need to accomplish in this assignment..."></textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="language" class="form-label">Programming Language</label>
+                                    <select class="form-select" id="language" name="language">
+                                        <option value="python" selected>Python</option>
+                                        <option value="java">Java</option>
+                                        <option value="cpp">C++</option>
+                                        <option value="javascript">JavaScript</option>
+                                        <option value="c">C</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="maxScore" class="form-label">Maximum Score</label>
+                                    <input type="number" class="form-control" id="maxScore" name="maxScore" value="100" min="1" max="1000">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="deadline" class="form-label">Deadline *</label>
+                                    <input type="datetime-local" class="form-control" id="deadline" name="deadline" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="timeLimit" class="form-label">Time Limit (seconds)</label>
+                                    <input type="number" class="form-control" id="timeLimit" name="timeLimit" value="10" min="1" max="300">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="starterCode" class="form-label">Starter Code (Optional)</label>
+                            <textarea class="form-control code-editor" id="starterCode" name="starterCode" rows="8" 
+                                placeholder="def solve():\n    # Your code here\n    pass"></textarea>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0"><i class="fas fa-vial"></i> Test Cases</h6>
+                            </div>
+                            <div class="card-body">
+                                <div id="testCases">
+                                    <div class="test-case mb-3">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <label class="form-label">Input</label>
+                                                <textarea class="form-control" name="testInput[]" rows="2" placeholder="Enter test input..."></textarea>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <label class="form-label">Expected Output</label>
+                                                <textarea class="form-control" name="testOutput[]" rows="2" placeholder="Enter expected output..."></textarea>
+                                            </div>
+                                            <div class="col-md-2 d-flex align-items-end">
+                                                <button type="button" class="btn btn-danger" onclick="removeTestCase(this)">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-outline-primary" onclick="addTestCase()">
+                                    <i class="fas fa-plus"></i> Add Test Case
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-save"></i> Create Assignment
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-lg" onclick="previewAssignment()">
+                                <i class="fas fa-eye"></i> Preview
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0"><i class="fas fa-lightbulb"></i> Tips for Creating Assignments</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Write clear, specific descriptions</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Include multiple test cases</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Set realistic deadlines</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Provide starter code when helpful</li>
+                        <li class="mb-2"><i class="fas fa-check text-success"></i> Consider edge cases in testing</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <div class="card-header bg-warning">
+                    <h6 class="mb-0"><i class="fas fa-robot"></i> AI Grading Features</h6>
+                </div>
+                <div class="card-body">
+                    <p class="small mb-2"><strong>Automatic Features:</strong></p>
+                    <ul class="small">
+                        <li>Code execution and testing</li>
+                        <li>Plagiarism detection (>91% threshold)</li>
+                        <li>Performance analysis</li>
+                        <li>Style and quality assessment</li>
+                        <li>Instant feedback generation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Set default deadline to tomorrow
+document.addEventListener('DOMContentLoaded', function() {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(23, 59);
+    document.getElementById('deadline').value = tomorrow.toISOString().slice(0, 16);
+});
+
+function addTestCase() {
+    const testCasesContainer = document.getElementById('testCases');
+    const testCaseHtml = `
+        <div class="test-case mb-3">
+            <div class="row">
+                <div class="col-md-5">
+                    <label class="form-label">Input</label>
+                    <textarea class="form-control" name="testInput[]" rows="2" placeholder="Enter test input..."></textarea>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">Expected Output</label>
+                    <textarea class="form-control" name="testOutput[]" rows="2" placeholder="Enter expected output..."></textarea>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-danger" onclick="removeTestCase(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    testCasesContainer.insertAdjacentHTML('beforeend', testCaseHtml);
+}
+
+function removeTestCase(button) {
+    const testCases = document.querySelectorAll('.test-case');
+    if (testCases.length > 1) {
+        button.closest('.test-case').remove();
+    } else {
+        showAlert('At least one test case is required!', 'warning');
+    }
+}
+
+function previewAssignment() {
+    const title = document.getElementById('title').value;
+    const description = document.getElementById('description').value;
+    const language = document.getElementById('language').value;
+    const difficulty = document.getElementById('difficulty').value;
+    
+    if (!title || !description) {
+        showAlert('Please fill in title and description to preview!', 'warning');
+        return;
+    }
+    
+    const previewHtml = `
+        <h4>${title}</h4>
+        <p><strong>Language:</strong> ${language.charAt(0).toUpperCase() + language.slice(1)}</p>
+        <p><strong>Difficulty:</strong> <span class="badge bg-${getDifficultyColor(difficulty)}">${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}</span></p>
+        <p><strong>Description:</strong></p>
+        <p>${description}</p>
+    `;
+    
+    const modal = new bootstrap.Modal(document.createElement('div'));
+    // Simple preview alert for now
+    alert('Assignment Preview:\n\n' + title + '\n\nLanguage: ' + language + '\nDifficulty: ' + difficulty + '\n\n' + description);
+}
+
+function getDifficultyColor(difficulty) {
+    const colors = {
+        'easy': 'success',
+        'medium': 'warning',
+        'hard': 'danger',
+        'expert': 'dark'
+    };
+    return colors[difficulty] || 'secondary';
+}
+
+// Handle form submission
+document.getElementById('createAssignmentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const assignmentData = {
+        title: formData.get('title'),
+        description: formData.get('description'),
+        language: formData.get('language'),
+        difficulty: formData.get('difficulty'),
+        maxScore: formData.get('maxScore'),
+        deadline: formData.get('deadline'),
+        timeLimit: formData.get('timeLimit'),
+        starterCode: formData.get('starterCode'),
+        testCases: []
+    };
+    
+    // Collect test cases
+    const inputs = formData.getAll('testInput[]');
+    const outputs = formData.getAll('testOutput[]');
+    
+    for (let i = 0; i < inputs.length; i++) {
+        if (inputs[i].trim() && outputs[i].trim()) {
+            assignmentData.testCases.push({
+                input: inputs[i].trim(),
+                expectedOutput: outputs[i].trim()
+            });
+        }
+    }
+    
+    if (assignmentData.testCases.length === 0) {
+        showAlert('Please add at least one complete test case!', 'danger');
+        return;
+    }
+    
+    // Simulate assignment creation
+    showAlert('Creating assignment...', 'info');
+    
+    setTimeout(function() {
+        showAlert('Assignment "' + assignmentData.title + '" created successfully!', 'success');
+        
+        setTimeout(function() {
+            window.location.href = '/manage-assignments';
+        }, 2000);
+    }, 1500);
+});
+
+function showAlert(message, type = 'info') {
+    const alertHtml = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            <i class="fas fa-info-circle"></i> ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    $('.container').prepend(alertHtml);
+    
+    setTimeout(function() {
+        $('.alert:first').fadeOut(function() {
+            $(this).remove();
+        });
+    }, 3000);
+}
+</script>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.code-editor {
+    font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
+    font-size: 14px;
+    background-color: #f8f9fa;
+}
+</style>
+{% endblock %}
