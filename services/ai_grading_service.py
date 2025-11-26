@@ -1,7 +1,20 @@
 from services.code_analysis_service import code_analyzer
 from services.gamification_service import gamification_service
-
+from typing import List, Dict, Tuple, Any
 import logging
+import subprocess
+import tempfile
+import os
+import time
+import json
+
+try:
+    import openai
+    from config import Config
+    OPENAI_AVAILABLE = True
+except ImportError:
+    OPENAI_AVAILABLE = False
+    Config = None
 
 logger = logging.getLogger(__name__)
 
