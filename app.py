@@ -74,7 +74,7 @@ def create_app():
 
         # CSP Configuration for 10/10 Security - Enhanced
         csp = {
-            "default-src": "'self'",
+            "default-src": ["'self'"],
             "script-src": [
                 "'self'",
                 "'unsafe-inline'",  # Required for inline scripts
@@ -95,12 +95,11 @@ def create_app():
                 "https://fonts.gstatic.com",
             ],
             "img-src": ["'self'", "data:", "https:"],
-            "connect-src": "'self'",
-            "frame-ancestors": "'none'",
-            "base-uri": "'self'",
-            "form-action": "'self'",
-            "object-src": "'none'",
-            "upgrade-insecure-requests": True,
+            "connect-src": ["'self'"],
+            "frame-ancestors": ["'none'"],
+            "base-uri": ["'self'"],
+            "form-action": ["'self'"],
+            "object-src": ["'none'"],
         }
 
         # Initialize Talisman (Security Headers) - skip in testing
