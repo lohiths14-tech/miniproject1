@@ -1,0 +1,546 @@
+/*
+ * Modern Animations and Transitions
+ * Smooth, performant CSS animations
+ */
+
+/* Page transitions */
+.page-transition {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Card animations */
+.card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.card-animate {
+    animation: cardSlideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes cardSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Button hover effects */
+.btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Loading animations */
+.skeleton {
+    background: linear-gradient(90deg,
+            #f0f0f0 0%,
+            #e0e0e0 20%,
+            #f0f0f0 40%,
+            #f0f0f0 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* Success animation */
+.success-checkmark {
+    animation: scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes scaleIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Error shake animation */
+.error-shake {
+    animation: shake 0.6s cubic-bezier(.36, .07, .19, .97);
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translateX(-2px);
+    }
+
+    20%,
+    80% {
+        transform: translateX(4px);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translateX(-6px);
+    }
+
+    40%,
+    60% {
+        transform: translateX(6px);
+    }
+}
+
+/* Progress bar animation */
+.progress-bar-animated {
+    animation: progressSlide 2s ease-out forwards;
+}
+
+@keyframes progressSlide {
+    from {
+        width: 0%;
+    }
+}
+
+/* Leaderboard animations */
+.leaderboard-item {
+    opacity: 0;
+    animation: slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.trophy {
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Points bar animation */
+.points-bar {
+    transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Notification toast */
+.toast-notification {
+    animation: toastSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes toastSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Achievement badge popup */
+.achievement-popup {
+    animation: achievementPop 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes achievementPop {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(-10deg);
+    }
+
+    50% {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+    }
+}
+
+/* Code editor cursor blink */
+.cursor-blink {
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+/* Ripple effect */
+.ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    animation: rippleEffect 0.6s ease-out;
+}
+
+@keyframes rippleEffect {
+    to {
+        width: 300px;
+        height: 300px;
+        opacity: 0;
+    }
+}
+
+/* Floating animation for decorative elements */
+.float {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* Pulse animation for alerts */
+.pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Spin animation for loaders */
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Gradient animation */
+.gradient-animate {
+    background-size: 200% 200%;
+    animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Onboarding celebration */
+.onboarding-celebration {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+}
+
+.celebration-content {
+    background: white;
+    padding: 3rem;
+    border-radius: 1rem;
+    text-align: center;
+    animation: celebrationPop 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes celebrationPop {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.celebration-icon {
+    font-size: 4rem;
+    animation: rotate360 0.6s ease-in-out;
+}
+
+@keyframes rotate360 {
+    from {
+        transform: rotate(0deg) scale(0);
+    }
+
+    to {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+/* Chart tooltip */
+.chart-tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    pointer-events: none;
+    font-size: 0.875rem;
+    transition: opacity 0.2s ease;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
+/* Stagger animation for lists */
+.stagger-item {
+    opacity: 0;
+    animation: staggerFadeIn 0.5s forwards;
+}
+
+.stagger-item:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.stagger-item:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.stagger-item:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.stagger-item:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.stagger-item:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+@keyframes staggerFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Dark mode transition */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Accessibility: Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+
+/* ==========================================================================
+   Chart Loading States
+   ========================================================================== */
+
+.chart-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    color: #64748b;
+}
+
+.chart-loading .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e2e8f0;
+    border-top-color: #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.chart-loading p {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+}
+
+/* Refresh button animation */
+.refreshing {
+    animation: pulse 1s ease-in-out;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Chart tooltip styles */
+.chart-tooltip {
+    position: absolute;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    border-radius: 4px;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Leaderboard animations */
+.leaderboard-item {
+    animation: slideInLeft 0.5s ease-out forwards;
+    opacity: 0;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.points-bar {
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}

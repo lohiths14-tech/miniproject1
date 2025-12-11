@@ -1,0 +1,9 @@
+# Testing Requirements for accessibility tests
+
+# Core dependencies
+selenium==4.16.0
+axe-selenium-python==2.1.6
+pytest-selenium==4.0.1
+
+# Optional: WebDriver managers
+webdriver-manager==4.0.1

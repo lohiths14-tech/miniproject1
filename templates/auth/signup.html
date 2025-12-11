@@ -4,88 +4,114 @@
 
 {% block extra_css %}
 <style>
-/* Signup page specific styles for better visibility */
-.card {
-    background-color: white !important;
-    color: #333 !important;
-}
+    /* Signup page specific styles for better visibility */
+    .card-header {
+        background-color: #14522d !important;
+        /* Dark Green for AAA */
+        color: white !important;
+    }
 
-.card-body {
-    background-color: white !important;
-}
+    .btn-success {
+        background-color: #14522d !important;
+        border-color: #14522d !important;
+    }
 
-.form-label {
-    color: #333 !important;
-    font-weight: 500;
-}
+    .btn-success:hover {
+        background-color: #0f3d21 !important;
+        border-color: #0f3d21 !important;
+    }
 
-.fw-bold {
-    color: #333 !important;
-}
+    .card {
+        background-color: white !important;
+        color: #333 !important;
+    }
 
-.form-control {
-    background-color: white !important;
-    border: 2px solid #e9ecef !important;
-    color: #333 !important;
-}
+    .card-body {
+        background-color: white !important;
+    }
 
-.form-control:focus {
-    background-color: white !important;
-    border-color: #007bff !important;
-    color: #333 !important;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
+    .form-label {
+        color: #333 !important;
+        font-weight: 500;
+    }
 
-.form-control::placeholder {
-    color: #666 !important;
-}
+    .fw-bold {
+        color: #333 !important;
+    }
 
-.input-group-text {
-    background-color: #f8f9fa !important;
-    border: 2px solid #e9ecef !important;
-    color: #333 !important;
-}
+    .form-control {
+        background-color: white !important;
+        border: 2px solid #e9ecef !important;
+        color: #333 !important;
+    }
 
-.form-check-label {
-    color: #333 !important;
-}
+    .form-control:focus {
+        background-color: white !important;
+        border-color: #007bff !important;
+        color: #333 !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
 
-.text-center p {
-    color: #333 !important;
-}
+    .form-control::placeholder {
+        color: #666 !important;
+    }
 
-.form-text {
-    color: #666 !important;
-}
+    .input-group-text {
+        background-color: #f8f9fa !important;
+        border: 2px solid #e9ecef !important;
+        color: #333 !important;
+    }
 
-.text-primary {
-    color: #007bff !important;
-}
+    .form-check-label {
+        color: #333 !important;
+    }
 
-/* Button visibility */
-.btn-outline-primary {
-    color: #007bff !important;
-    border-color: #007bff !important;
-}
+    .text-center p {
+        color: #333 !important;
+    }
 
-.btn-outline-success {
-    color: #28a745 !important;
-    border-color: #28a745 !important;
-}
+    .form-text {
+        color: #666 !important;
+    }
 
-/* Role selection buttons */
-.btn-check:checked + .btn {
-    color: white !important;
-}
+    .text-primary {
+        color: #007bff !important;
+    }
 
-/* Ensure all text is visible */
-body {
-    background-color: #f8f9fa !important;
-}
+    /* Button visibility */
+    .btn-outline-primary {
+        color: #004494 !important;
+        border-color: #004494 !important;
+    }
 
-.container {
-    color: #333 !important;
-}
+    .btn-outline-primary:hover {
+        background-color: #004494 !important;
+        color: white !important;
+    }
+
+    .btn-outline-success {
+        color: #14522d !important;
+        border-color: #14522d !important;
+    }
+
+    .btn-outline-success:hover {
+        background-color: #14522d !important;
+        color: white !important;
+    }
+
+    /* Role selection buttons */
+    .btn-check:checked+.btn {
+        color: white !important;
+    }
+
+    /* Ensure all text is visible */
+    body {
+        background-color: #f8f9fa !important;
+    }
+
+    .container {
+        color: #333 !important;
+    }
 </style>
 {% endblock %}
 
@@ -94,7 +120,7 @@ body {
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             <div class="card shadow-lg">
-                <div class="card-header bg-success text-white text-center">
+                <div class="card-header text-white text-center">
                     <h3><i class="fas fa-user-plus"></i> Create Account</h3>
                 </div>
                 <div class="card-body p-4">
@@ -103,7 +129,8 @@ body {
                         <label class="form-label fw-bold">Select Your Role</label>
                         <div class="row g-2">
                             <div class="col-6">
-                                <input type="radio" class="btn-check" name="role" id="studentRole" value="student" checked>
+                                <input type="radio" class="btn-check" name="role" id="studentRole" value="student"
+                                    checked>
                                 <label class="btn btn-outline-primary w-100" for="studentRole">
                                     <i class="fas fa-user-graduate"></i><br>Student
                                 </label>
@@ -116,7 +143,7 @@ body {
                             </div>
                         </div>
                     </div>
-                    
+
                     <form id="signupForm">
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -128,7 +155,7 @@ body {
                                     <input type="email" class="form-control" id="email" name="email" required>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-6 mb-3">
                                 <label for="username" class="form-label">Username</label>
                                 <div class="input-group">
@@ -139,7 +166,7 @@ body {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Role-specific fields -->
                         <div id="studentFields">
                             <div class="mb-3">
@@ -152,7 +179,7 @@ body {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div id="lecturerFields" style="display: none;">
                             <div class="mb-3">
                                 <label for="lecturerId" class="form-label">Lecturer ID</label>
@@ -164,7 +191,7 @@ body {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
                             <div class="input-group">
@@ -180,34 +207,35 @@ body {
                                 Password must be at least 8 characters with uppercase, lowercase, and digit.
                             </div>
                         </div>
-                        
+
                         <div class="mb-3">
                             <label for="confirmPassword" class="form-label">Confirm Password</label>
                             <div class="input-group">
                                 <span class="input-group-text">
                                     <i class="fas fa-lock"></i>
                                 </span>
-                                <input type="password" class="form-control" id="confirmPassword" name="confirm_password" required>
+                                <input type="password" class="form-control" id="confirmPassword" name="confirm_password"
+                                    required>
                             </div>
                         </div>
-                        
+
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="agreeTerms" required>
                             <label class="form-check-label" for="agreeTerms">
-                                I agree to the <a href="#" class="text-primary">Terms of Service</a> 
+                                I agree to the <a href="#" class="text-primary">Terms of Service</a>
                                 and <a href="#" class="text-primary">Privacy Policy</a>
                             </label>
                         </div>
-                        
+
                         <div class="d-grid">
                             <button type="submit" class="btn btn-success btn-lg">
                                 <i class="fas fa-user-plus"></i> Create Account
                             </button>
                         </div>
                     </form>
-                    
+
                     <hr class="my-4">
-                    
+
                     <div class="text-center">
                         <p class="mb-2">Already have an account?</p>
                         <a href="{{ url_for('login') }}" class="btn btn-outline-primary">
@@ -223,124 +251,124 @@ body {
 
 {% block extra_js %}
 <script>
-$(document).ready(function() {
-    // Handle role selection
-    $('input[name="role"]').change(function() {
-        const role = $(this).val();
-        
-        if (role === 'student') {
-            $('#studentFields').show();
-            $('#lecturerFields').hide();
-            $('#usn').prop('required', true);
-            $('#lecturerId').prop('required', false);
-        } else {
-            $('#studentFields').hide();
-            $('#lecturerFields').show();
-            $('#usn').prop('required', false);
-            $('#lecturerId').prop('required', true);
-        }
-    });
-    
-    // Set initial role from URL parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const roleParam = urlParams.get('role');
-    if (roleParam) {
-        $(`input[name="role"][value="${roleParam}"]`).prop('checked', true).trigger('change');
-    }
-    
-    // Toggle password visibility
-    $('#togglePassword').click(function() {
-        const passwordField = $('#password');
-        const icon = $(this).find('i');
-        
-        if (passwordField.attr('type') === 'password') {
-            passwordField.attr('type', 'text');
-            icon.removeClass('fa-eye').addClass('fa-eye-slash');
-        } else {
-            passwordField.attr('type', 'password');
-            icon.removeClass('fa-eye-slash').addClass('fa-eye');
-        }
-    });
-    
-    // Password confirmation validation
-    $('#confirmPassword').on('input', function() {
-        const password = $('#password').val();
-        const confirmPassword = $(this).val();
-        
-        if (password && confirmPassword) {
-            if (password !== confirmPassword) {
-                this.setCustomValidity('Passwords do not match');
-                $(this).addClass('is-invalid');
+    $(document).ready(function () {
+        // Handle role selection
+        $('input[name="role"]').change(function () {
+            const role = $(this).val();
+
+            if (role === 'student') {
+                $('#studentFields').show();
+                $('#lecturerFields').hide();
+                $('#usn').prop('required', true);
+                $('#lecturerId').prop('required', false);
             } else {
-                this.setCustomValidity('');
-                $(this).removeClass('is-invalid').addClass('is-valid');
-            }
-        }
-    });
-    
-    // Handle form submission
-    $('#signupForm').submit(function(e) {
-        e.preventDefault();
-        
-        const role = $('input[name="role"]:checked').val();
-        const password = $('#password').val();
-        const confirmPassword = $('#confirmPassword').val();
-        
-        // Validate passwords match
-        if (password !== confirmPassword) {
-            showAlert('Passwords do not match!', 'danger');
-            return;
-        }
-        
-        const formData = {
-            email: $('#email').val(),
-            username: $('#username').val(),
-            password: password,
-            role: role
-        };
-        
-        // Add role-specific fields
-        if (role === 'student') {
-            formData.usn = $('#usn').val();
-        } else {
-            formData.lecturer_id = $('#lecturerId').val();
-        }
-        
-        // Show loading state
-        const submitBtn = $(this).find('button[type="submit"]');
-        const originalText = submitBtn.html();
-        submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Creating Account...').prop('disabled', true);
-        
-        $.ajax({
-            url: '/api/auth/signup',
-            method: 'POST',
-            data: JSON.stringify(formData),
-            contentType: 'application/json',
-            success: function(response) {
-                // Store token
-                localStorage.setItem('token', response.access_token);
-                localStorage.setItem('user', JSON.stringify(response.user));
-                
-                showAlert('Account created successfully! Redirecting...', 'success');
-                
-                // Redirect based on user role
-                setTimeout(function() {
-                    if (response.user.role === 'student') {
-                        window.location.href = '/student-dashboard';
-                    } else {
-                        window.location.href = '/lecturer-dashboard';
-                    }
-                }, 1500);
-            },
-            error: function(xhr) {
-                const response = xhr.responseJSON;
-                showAlert(response.error || 'Account creation failed. Please try again.', 'danger');
-                
-                // Reset button
-                submitBtn.html(originalText).prop('disabled', false);
+                $('#studentFields').hide();
+                $('#lecturerFields').show();
+                $('#usn').prop('required', false);
+                $('#lecturerId').prop('required', true);
             }
         });
+
+        // Set initial role from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const roleParam = urlParams.get('role');
+        if (roleParam) {
+            $(`input[name="role"][value="${roleParam}"]`).prop('checked', true).trigger('change');
+        }
+
+        // Toggle password visibility
+        $('#togglePassword').click(function () {
+            const passwordField = $('#password');
+            const icon = $(this).find('i');
+
+            if (passwordField.attr('type') === 'password') {
+                passwordField.attr('type', 'text');
+                icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            } else {
+                passwordField.attr('type', 'password');
+                icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+        });
+
+        // Password confirmation validation
+        $('#confirmPassword').on('input', function () {
+            const password = $('#password').val();
+            const confirmPassword = $(this).val();
+
+            if (password && confirmPassword) {
+                if (password !== confirmPassword) {
+                    this.setCustomValidity('Passwords do not match');
+                    $(this).addClass('is-invalid');
+                } else {
+                    this.setCustomValidity('');
+                    $(this).removeClass('is-invalid').addClass('is-valid');
+                }
+            }
+        });
+
+        // Handle form submission
+        $('#signupForm').submit(function (e) {
+            e.preventDefault();
+
+            const role = $('input[name="role"]:checked').val();
+            const password = $('#password').val();
+            const confirmPassword = $('#confirmPassword').val();
+
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                showAlert('Passwords do not match!', 'danger');
+                return;
+            }
+
+            const formData = {
+                email: $('#email').val(),
+                username: $('#username').val(),
+                password: password,
+                role: role
+            };
+
+            // Add role-specific fields
+            if (role === 'student') {
+                formData.usn = $('#usn').val();
+            } else {
+                formData.lecturer_id = $('#lecturerId').val();
+            }
+
+            // Show loading state
+            const submitBtn = $(this).find('button[type="submit"]');
+            const originalText = submitBtn.html();
+            submitBtn.html('<i class="fas fa-spinner fa-spin"></i> Creating Account...').prop('disabled', true);
+
+            $.ajax({
+                url: '/api/auth/signup',
+                method: 'POST',
+                data: JSON.stringify(formData),
+                contentType: 'application/json',
+                success: function (response) {
+                    // Store token
+                    localStorage.setItem('token', response.access_token);
+                    localStorage.setItem('user', JSON.stringify(response.user));
+
+                    showAlert('Account created successfully! Redirecting...', 'success');
+
+                    // Redirect based on user role
+                    setTimeout(function () {
+                        if (response.user.role === 'student') {
+                            window.location.href = '/student-dashboard';
+                        } else {
+                            window.location.href = '/lecturer-dashboard';
+                        }
+                    }, 1500);
+                },
+                error: function (xhr) {
+                    const response = xhr.responseJSON;
+                    showAlert(response.error || 'Account creation failed. Please try again.', 'danger');
+
+                    // Reset button
+                    submitBtn.html(originalText).prop('disabled', false);
+                }
+            });
+        });
     });
-});
 </script>
 {% endblock %}

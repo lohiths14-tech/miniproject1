@@ -1,0 +1,535 @@
+/**
+ * Responsive Breakpoints System
+ * 5 breakpoints for mobile-first responsive design
+ */
+
+/* ==========================================================================
+   CSS Custom Properties for Breakpoints
+   ========================================================================== */
+
+:root {
+    /* Breakpoint values */
+    --breakpoint-xs: 320px;
+    /* Extra small devices (phones) */
+    --breakpoint-sm: 576px;
+    /* Small devices (large phones) */
+    --breakpoint-md: 768px;
+    /* Medium devices (tablets) */
+    --breakpoint-lg: 1024px;
+    /* Large devices (desktops) */
+    --breakpoint-xl: 1280px;
+    /* Extra large devices (large desktops) */
+
+    /* Container max-widths */
+    --container-xs: 100%;
+    --container-sm: 540px;
+    --container-md: 720px;
+    --container-lg: 960px;
+    --container-xl: 1200px;
+
+    /* Spacing scale (responsive) */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-2xl: 3rem;
+
+    /* Font sizes (responsive) */
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    --font-size-4xl: 2.25rem;
+}
+
+/* ==========================================================================
+   Base Container
+   ========================================================================== */
+
+.container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+}
+
+/* ==========================================================================
+   Breakpoint 1: Extra Small (320px+) - Mobile Phones
+   ========================================================================== */
+
+@media (min-width: 320px) {
+    .container {
+        max-width: var(--container-xs);
+    }
+
+    /* Typography adjustments */
+    bo font-size: var(--font-size-sm);
+}
+
+h1 {
+    font-size: var(--font-size-2xl);
+}
+
+h2 {
+    font-size: var(--font-size-xl);
+}
+
+h3 {
+    font-size: var(--font-size-lg);
+}
+
+/* Layout utilities */
+.grid-xs-1 {
+    grid-template-columns: repeat(1, 1fr);
+}
+
+.hide-xs {
+    display: none !important;
+}
+
+.show-xs {
+    display: block !important;
+}
+
+/* Spacing */
+.p-xs {
+    padding: var(--spacing-sm);
+}
+
+.m-xs {
+    margin: var(--spacing-sm);
+}
+}
+
+/* ==========================================================================
+   Breakpoint 2: Small (576px+) - Large Phones / Small Tablets
+   ========================================================================== */
+
+@media (min-width: 576px) {
+    .container {
+        max-width: var(--container-sm);
+    }
+
+    /* Typography adjustments */
+    body {
+        font-size: var(--font-size-base);
+    }
+
+    h1 {
+        font-size: var(--font-size-3xl);
+    }
+
+    h2 {
+        font-size: var(--font-size-2xl);
+    }
+
+    h3 {
+        font-size: var(--font-size-xl);
+    }
+
+    /* Layout utilities */
+    .grid-sm-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hide-sm {
+        display: none !important;
+    }
+
+    .show-sm {
+        display: block !important;
+    }
+
+    /* Flex utilities */
+    .flex-sm-row {
+        flex-direction: row;
+    }
+
+    .flex-sm-column {
+        flex-direction: column;
+    }
+
+    /* Spacing */
+    .p-sm {
+        padding: var(--spacing-md);
+    }
+
+    .m-sm {
+        margin: var(--spacing-md);
+    }
+
+    /* Cards and components */
+    .card {
+        padding: var(--spacing-lg);
+    }
+
+    /* Navigation */
+    .nav-mobile {
+        display: none;
+    }
+}
+
+/* ==========================================================================
+   Breakpoint 3: Medium (768px+) - Tablets
+   ========================================================================== */
+
+@media (min-width: 768px) {
+    .container {
+        max-width: var(--container-md);
+        padding-left: var(--spacing-lg);
+        padding-right: var(--spacing-lg);
+    }
+
+    /* Typography adjustments */
+    h1 {
+        font-size: var(--font-size-4xl);
+    }
+
+    h2 {
+        font-size: var(--font-size-3xl);
+    }
+
+    h3 {
+        font-size: var(--font-size-2xl);
+    }
+
+    /* Layout utilities */
+    .grid-md-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-md-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .hide-md {
+        display: none !important;
+    }
+
+    .show-md {
+        display: block !important;
+    }
+
+    /* Flex utilities */
+    .flex-md-row {
+        flex-direction: row;
+    }
+
+    .flex-md-column {
+        flex-direction: column;
+    }
+
+    /* Spacing */
+    .p-md {
+        padding: var(--spacing-lg);
+    }
+
+    .m-md {
+        margin: var(--spacing-lg);
+    }
+
+    /* Dashboard layout */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 250px;
+    }
+
+    /* Forms */
+    .form-row {
+        display: flex;
+        gap: var(--spacing-md);
+    }
+
+    .form-row>* {
+        flex: 1;
+    }
+}
+
+/* ==========================================================================
+   Breakpoint 4: Large (1024px+) - Desktops
+   ========================================================================== */
+
+@media (min-width: 1024px) {
+    .container {
+        max-width: var(--container-lg);
+        padding-left: var(--spacing-xl);
+        padding-right: var(--spacing-xl);
+    }
+
+    /* Layout utilities */
+    .grid-lg-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid-lg-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .hide-lg {
+        display: none !important;
+    }
+
+    .show-lg {
+        display: block !important;
+    }
+
+    /* Flex utilities */
+    .flex-lg-row {
+        flex-direction: row;
+    }
+
+    .flex-lg-column {
+        flex-direction: column;
+    }
+
+    /* Spacing */
+    .p-lg {
+        padding: var(--spacing-xl);
+    }
+
+    .m-lg {
+        margin: var(--spacing-xl);
+    }
+
+    /* Dashboard layout */
+    .dashboard-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-xl);
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 280px;
+    }
+
+    /* Main content with sidebar */
+    .layout-with-sidebar {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: var(--spacing-xl);
+    }
+
+    /* Code editor */
+    .code-editor-container {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: var(--spacing-lg);
+    }
+
+    /* Tables */
+    .table-responsive {
+        overflow-x: visible;
+    }
+}
+
+/* ==========================================================================
+   Breakpoint 5: Extra Large (1280px+) - Large Desktops
+   ========================================================================== */
+
+@media (min-width: 1280px) {
+    .container {
+        max-width: var(--container-xl);
+        padding-left: var(--spacing-2xl);
+        padding-right: var(--spacing-2xl);
+    }
+
+    /* Layout utilities */
+    .grid-xl-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .grid-xl-5 {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .hide-xl {
+        display: none !important;
+    }
+
+    .show-xl {
+        display: block !important;
+    }
+
+    /* Flex utilities */
+    .flex-xl-row {
+        flex-direction: row;
+    }
+
+    .flex-xl-column {
+        flex-direction: column;
+    }
+
+    /* Spacing */
+    .p-xl {
+        padding: var(--spacing-2xl);
+    }
+
+    .m-xl {
+        margin: var(--spacing-2xl);
+    }
+
+    /* Dashboard layout */
+    .dashboard-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--spacing-2xl);
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 320px;
+    }
+
+    /* Main content with sidebar */
+    .layout-with-sidebar {
+        grid-template-columns: 320px 1fr;
+        gap: var(--spacing-2xl);
+    }
+
+    /* Code editor */
+    .code-editor-container {
+        grid-template-columns: 1fr 450px;
+    }
+
+    /* Wide content */
+    .content-wide {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+}
+
+/* ==========================================================================
+   Responsive Utilities
+   ========================================================================== */
+
+/* Display utilities for all breakpoints */
+.d-block {
+    display: block;
+}
+
+.d-inline {
+    display: inline;
+}
+
+.d-inline-block {
+    display: inline-block;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.d-grid {
+    display: grid;
+}
+
+.d-none {
+    display: none;
+}
+
+/* Text alignment */
+.text-left {
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+@media (max-width: 767px) {
+    .text-center-mobile {
+        text-align: center;
+    }
+}
+
+/* Responsive images */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.img-responsive {
+    width: 100%;
+    height: auto;
+}
+
+/* Responsive tables */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 767px) {
+    .table-responsive table {
+        min-width: 600px;
+    }
+}
+
+/* Responsive embeds (videos, iframes) */
+.embed-responsive {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+}
+
+.embed-responsive::before {
+    display: block;
+    content: "";
+}
+
+.embed-responsive-16by9::before {
+    padding-top: 56.25%;
+    /* 16:9 aspect ratio */
+}
+
+.embed-responsive-4by3::before {
+    padding-top: 75%;
+    /* 4:3 aspect ratio */
+}
+
+.embed-responsive iframe,
+.embed-responsive embed,
+.embed-responsive object,
+.embed-responsive video {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* ==========================================================================
+   Print Styles
+   ========================================================================== */
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    .container {
+        max-width: 100%;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+}

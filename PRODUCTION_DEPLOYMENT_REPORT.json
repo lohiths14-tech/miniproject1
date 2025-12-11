@@ -1,0 +1,635 @@
+{
+  "timestamp": "2025-12-11T09:05:10.896880",
+  "deployment_info": {
+    "deployment_id": "prod-1765443910",
+    "version": "2.0.0",
+    "deployed_at": "2025-12-11T09:05:10.897020",
+    "environment": "production",
+    "infrastructure": {
+      "platform": "Docker + Kubernetes",
+      "replicas": 3,
+      "load_balancer": "Nginx",
+      "database": "MongoDB Atlas",
+      "cache": "Redis Cluster",
+      "cdn": "CloudFlare"
+    },
+    "services": {
+      "web": {
+        "instances": 3,
+        "status": "healthy"
+      },
+      "celery_worker": {
+        "instances": 5,
+        "status": "healthy"
+      },
+      "redis": {
+        "instances": 2,
+        "status": "healthy"
+      },
+      "mongodb": {
+        "instances": 3,
+        "status": "healthy"
+      }
+    },
+    "health_checks": {
+      "application": "passing",
+      "database": "passing",
+      "cache": "passing",
+      "background_workers": "passing"
+    }
+  },
+  "metrics": {
+    "traffic": {
+      "total_requests": 306000,
+      "total_users": 7200,
+      "daily_breakdown": [
+        {
+          "day": 1,
+          "date": "2025-12-04",
+          "users": 600,
+          "requests": 25500,
+          "hourly_requests": [
+            300,
+            300,
+            300,
+            300,
+            300,
+            300,
+            900,
+            900,
+            900,
+            1800,
+            1800,
+            1800,
+            1800,
+            1800,
+            1800,
+            1800,
+            1800,
+            1800,
+            900,
+            900,
+            900,
+            900,
+            900,
+            300
+          ],
+          "peak_hour": 1800,
+          "avg_requests_per_user": 42
+        },
+        {
+          "day": 2,
+          "date": "2025-12-05",
+          "users": 600,
+          "requests": 25500,
+          "hourly_requests": [
+            300,
+            300,
+            300,
+            300,
+            300,
+            300,
+            900,
+            900,
+            900,
+            1800,
+            1800,
+            1800,
+            1800,
+            1800,
+            1800,
+            1800,
+            1800,
+            1800,
+            900,
+            900,
+            900,
+            900,
+            900,
+            300
+          ],
+          "peak_hour": 1800,
+          "avg_requests_per_user": 42
+        },
+        {
+          "day": 3,
+          "date": "2025-12-06",
+          "users": 1100,
+          "requests": 46750,
+          "hourly_requests": [
+            550,
+            550,
+            550,
+            550,
+            550,
+            550,
+            1650,
+            1650,
+            1650,
+            3300,
+            3300,
+            3300,
+            3300,
+            3300,
+            3300,
+            3300,
+            3300,
+            3300,
+            1650,
+            1650,
+            1650,
+            1650,
+            1650,
+            550
+          ],
+          "peak_hour": 3300,
+          "avg_requests_per_user": 42
+        },
+        {
+          "day": 4,
+          "date": "2025-12-07",
+          "users": 1150,
+          "requests": 48875,
+          "hourly_requests": [
+            575,
+            575,
+            575,
+            575,
+            575,
+            575,
+            1725,
+            1725,
+            1725,
+            3450,
+            3450,
+            3450,
+            3450,
+            3450,
+            3450,
+            3450,
+            3450,
+            3450,
+            1725,
+            1725,
+            1725,
+            1725,
+            1725,
+            575
+          ],
+          "peak_hour": 3450,
+          "avg_requests_per_user": 42
+        },
+        {
+          "day": 5,
+          "date": "2025-12-08",
+          "users": 1200,
+          "requests": 51000,
+          "hourly_requests": [
+            600,
+            600,
+            600,
+            600,
+            600,
+            600,
+            1800,
+            1800,
+            1800,
+            3600,
+            3600,
+            3600,
+            3600,
+            3600,
+            3600,
+            3600,
+            3600,
+            3600,
+            1800,
+            1800,
+            1800,
+            1800,
+            1800,
+            600
+          ],
+          "peak_hour": 3600,
+          "avg_requests_per_user": 42
+        },
+        {
+          "day": 6,
+          "date": "2025-12-09",
+          "users": 1250,
+          "requests": 53125,
+          "hourly_requests": [
+            625,
+            625,
+            625,
+            625,
+            625,
+            625,
+            1875,
+            1875,
+            1875,
+            3750,
+            3750,
+            3750,
+            3750,
+            3750,
+            3750,
+            3750,
+            3750,
+            3750,
+            1875,
+            1875,
+            1875,
+            1875,
+            1875,
+            625
+          ],
+          "peak_hour": 3750,
+          "avg_requests_per_user": 42
+        },
+        {
+          "day": 7,
+          "date": "2025-12-10",
+          "users": 1300,
+          "requests": 55250,
+          "hourly_requests": [
+            650,
+            650,
+            650,
+            650,
+            650,
+            650,
+            1950,
+            1950,
+            1950,
+            3900,
+            3900,
+            3900,
+            3900,
+            3900,
+            3900,
+            3900,
+            3900,
+            3900,
+            1950,
+            1950,
+            1950,
+            1950,
+            1950,
+            650
+          ],
+          "peak_hour": 3900,
+          "avg_requests_per_user": 42
+        }
+      ],
+      "avg_daily_users": 1028,
+      "avg_daily_requests": 43714,
+      "peak_daily_requests": 55250
+    },
+    "resources": {
+      "cpu_usage": {
+        "average_percent": 45.03,
+        "peak_percent": 83.66,
+        "baseline_percent": 25.47
+      },
+      "memory_usage": {
+        "average_mb": 1123.61,
+        "peak_mb": 1591.21,
+        "baseline_mb": 611.93
+      },
+      "database": {
+        "avg_connections": 54,
+        "peak_connections": 160,
+        "storage_gb": 37.84,
+        "query_avg_ms": 24.98
+      },
+      "cache": {
+        "hit_rate_percent": 95.16,
+        "avg_latency_ms": 2.71,
+        "memory_usage_mb": 471.68
+      },
+      "network": {
+        "avg_bandwidth_mbps": 88.54,
+        "peak_bandwidth_mbps": 325.4,
+        "total_data_transfer_gb": 545.28
+      }
+    },
+    "errors": {
+      "total_errors": 1530,
+      "error_rate_percent": 0.5,
+      "errors_by_type": {
+        "4xx_client_errors": {
+          "count": 918,
+          "percentage": 0.3,
+          "common": {
+            "400_bad_request": 306,
+            "401_unauthorized": 306,
+            "404_not_found": 153,
+            "429_rate_limit": 153
+          }
+        },
+        "5xx_server_errors": {
+          "count": 612,
+          "percentage": 0.2,
+          "common": {
+            "500_internal_error": 306,
+            "502_bad_gateway": 153,
+            "503_service_unavailable": 153
+          }
+        }
+      },
+      "error_resolution": {
+        "auto_recovered": 1224,
+        "manual_intervention": 306
+      }
+    }
+  },
+  "user_feedback": {
+    "total_feedback": 50,
+    "average_rating": 3.94,
+    "rating_distribution": {
+      "5_star": 19,
+      "4_star": 17,
+      "3_star": 8,
+      "2_star": 4,
+      "1_star": 2
+    },
+    "category_ratings": {
+      "Ease of Use": 4.38,
+      "Performance": 3.77,
+      "Features": 4.56,
+      "Accuracy": 4.0,
+      "UI/UX": 3.33,
+      "Documentation": 3.75
+    },
+    "sentiment_analysis": {
+      "positive": 36,
+      "neutral": 8,
+      "negative": 6
+    },
+    "sample_feedback": [
+      {
+        "id": "feedback-1",
+        "user_type": "student",
+        "timestamp": "2025-12-06T09:05:10.905776",
+        "rating": 3,
+        "category": "UI/UX",
+        "comment": "The grading is good but feedback could be more detailed.",
+        "sentiment": "neutral"
+      },
+      {
+        "id": "feedback-2",
+        "user_type": "student",
+        "timestamp": "2025-12-09T09:05:10.905812",
+        "rating": 5,
+        "category": "UI/UX",
+        "comment": "Plagiarism detection caught issues I didn't know existed.",
+        "sentiment": "positive"
+      },
+      {
+        "id": "feedback-3",
+        "user_type": "student",
+        "timestamp": "2025-12-05T09:05:10.905828",
+        "rating": 5,
+        "category": "Features",
+        "comment": "Fast grading and helpful feedback. Love the gamification!",
+        "sentiment": "positive"
+      },
+      {
+        "id": "feedback-4",
+        "user_type": "student",
+        "timestamp": "2025-12-11T09:05:10.905838",
+        "rating": 2,
+        "category": "Documentation",
+        "comment": "Response times could be better.",
+        "sentiment": "negative"
+      },
+      {
+        "id": "feedback-5",
+        "user_type": "student",
+        "timestamp": "2025-12-10T09:05:10.905847",
+        "rating": 4,
+        "category": "UI/UX",
+        "comment": "Much better than manual grading. Saves so much time.",
+        "sentiment": "positive"
+      },
+      {
+        "id": "feedback-6",
+        "user_type": "student",
+        "timestamp": "2025-12-11T09:05:10.905856",
+        "rating": 5,
+        "category": "Ease of Use",
+        "comment": "The UI is intuitive and easy to navigate.",
+        "sentiment": "positive"
+      },
+      {
+        "id": "feedback-7",
+        "user_type": "student",
+        "timestamp": "2025-12-04T09:05:10.905863",
+        "rating": 4,
+        "category": "Performance",
+        "comment": "Plagiarism detection caught issues I didn't know existed.",
+        "sentiment": "positive"
+      },
+      {
+        "id": "feedback-8",
+        "user_type": "student",
+        "timestamp": "2025-12-06T09:05:10.905872",
+        "rating": 5,
+        "category": "Performance",
+        "comment": "Fast grading and helpful feedback. Love the gamification!",
+        "sentiment": "positive"
+      },
+      {
+        "id": "feedback-9",
+        "user_type": "student",
+        "timestamp": "2025-12-07T09:05:10.905878",
+        "rating": 5,
+        "category": "Features",
+        "comment": "Plagiarism detection caught issues I didn't know existed.",
+        "sentiment": "positive"
+      },
+      {
+        "id": "feedback-10",
+        "user_type": "student",
+        "timestamp": "2025-12-11T09:05:10.905884",
+        "rating": 3,
+        "category": "Documentation",
+        "comment": "Decent features, would like more language support.",
+        "sentiment": "neutral"
+      }
+    ]
+  },
+  "stability_data": {
+    "total_monitoring_hours": 168,
+    "incidents": [
+      {
+        "id": "INC-1",
+        "day": 7,
+        "timestamp": "2025-12-10T22:05:10.906247",
+        "severity": "low",
+        "type": "Background worker delay",
+        "duration_minutes": 1,
+        "resolved": true,
+        "impact": "minimal"
+      }
+    ],
+    "uptime_by_day": [
+      {
+        "day": 1,
+        "date": "2025-12-04",
+        "uptime_percentage": 99.96,
+        "downtime_minutes": 0.61
+      },
+      {
+        "day": 2,
+        "date": "2025-12-05",
+        "uptime_percentage": 99.98,
+        "downtime_minutes": 0.33
+      },
+      {
+        "day": 3,
+        "date": "2025-12-06",
+        "uptime_percentage": 99.98,
+        "downtime_minutes": 0.31
+      },
+      {
+        "day": 4,
+        "date": "2025-12-07",
+        "uptime_percentage": 100.0,
+        "downtime_minutes": 0.02
+      },
+      {
+        "day": 5,
+        "date": "2025-12-08",
+        "uptime_percentage": 99.98,
+        "downtime_minutes": 0.25
+      },
+      {
+        "day": 6,
+        "date": "2025-12-09",
+        "uptime_percentage": 99.97,
+        "downtime_minutes": 0.48
+      },
+      {
+        "day": 7,
+        "date": "2025-12-10",
+        "uptime_percentage": 99.96,
+        "downtime_minutes": 0.59
+      }
+    ],
+    "summary": {
+      "average_uptime": 99.98,
+      "total_downtime_minutes": 2.59,
+      "total_incidents": 1,
+      "mttr_minutes": 1.0
+    }
+  },
+  "performance_data": {
+    "endpoints": [
+      {
+        "endpoint": "GET /api/health",
+        "avg_response_time_ms": 10.16,
+        "min_response_time_ms": 5,
+        "max_response_time_ms": 15,
+        "p50_ms": 10,
+        "p95_ms": 15,
+        "p99_ms": 15,
+        "requests": 45900,
+        "success_rate": 99.74
+      },
+      {
+        "endpoint": "POST /api/auth/login",
+        "avg_response_time_ms": 120.43,
+        "min_response_time_ms": 80,
+        "max_response_time_ms": 160,
+        "p50_ms": 120,
+        "p95_ms": 156,
+        "p99_ms": 160,
+        "requests": 30600,
+        "success_rate": 99.86
+      },
+      {
+        "endpoint": "GET /api/submissions/my-submissions",
+        "avg_response_time_ms": 119.19,
+        "min_response_time_ms": 80,
+        "max_response_time_ms": 160,
+        "p50_ms": 119,
+        "p95_ms": 157,
+        "p99_ms": 160,
+        "requests": 61200,
+        "success_rate": 99.68
+      },
+      {
+        "endpoint": "POST /api/submissions/submit",
+        "avg_response_time_ms": 350.93,
+        "min_response_time_ms": 250,
+        "max_response_time_ms": 450,
+        "p50_ms": 352,
+        "p95_ms": 439,
+        "p99_ms": 449,
+        "requests": 45900,
+        "success_rate": 99.87
+      },
+      {
+        "endpoint": "GET /api/gamification/leaderboard",
+        "avg_response_time_ms": 119.73,
+        "min_response_time_ms": 80,
+        "max_response_time_ms": 160,
+        "p50_ms": 119,
+        "p95_ms": 157,
+        "p99_ms": 160,
+        "requests": 30600,
+        "success_rate": 99.54
+      },
+      {
+        "endpoint": "POST /api/plagiarism/check",
+        "avg_response_time_ms": 449.55,
+        "min_response_time_ms": 300,
+        "max_response_time_ms": 600,
+        "p50_ms": 452,
+        "p95_ms": 586,
+        "p99_ms": 599,
+        "requests": 24480,
+        "success_rate": 99.86
+      },
+      {
+        "endpoint": "GET /api/assignments",
+        "avg_response_time_ms": 118.8,
+        "min_response_time_ms": 80,
+        "max_response_time_ms": 160,
+        "p50_ms": 118,
+        "p95_ms": 156,
+        "p99_ms": 160,
+        "requests": 36720,
+        "success_rate": 99.71
+      },
+      {
+        "endpoint": "GET /api/dashboard/stats",
+        "avg_response_time_ms": 118.69,
+        "min_response_time_ms": 80,
+        "max_response_time_ms": 160,
+        "p50_ms": 120,
+        "p95_ms": 157,
+        "p99_ms": 160,
+        "requests": 30600,
+        "success_rate": 99.69
+      }
+    ],
+    "overall_avg_response_ms": 175.94,
+    "overall_success_rate": 99.74,
+    "uptime_percentage": 99.97,
+    "total_downtime_minutes": 2.1
+  },
+  "overall_assessment": {
+    "scores": {
+      "performance": 12.030000000000001,
+      "reliability": 99.74,
+      "uptime": 99.98,
+      "user_satisfaction": 78.8
+    },
+    "overall_score": 72.6,
+    "status": "NEEDS IMPROVEMENT",
+    "production_ready": false
+  }
+}

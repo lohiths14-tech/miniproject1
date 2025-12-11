@@ -2,16 +2,21 @@
 Enhanced Security Middleware
 Implements enterprise-grade security features
 """
-from flask import request, abort, g
-from functools import wraps
 import hashlib
 import hmac
 import time
+from functools import wraps
 from typing import Optional
+
+from flask import abort, g, request
+
 from config.security_config import (
-    CSP_POLICY, SECURITY_HEADERS, API_KEY_HEADER,
-    RATE_LIMIT_RULES
+    API_KEY_HEADER,
+    CSP_POLICY,
+    RATE_LIMIT_RULES,
+    SECURITY_HEADERS,
 )
+
 
 class SecurityMiddleware:
     """Enhanced security middleware with enterprise features"""
@@ -34,18 +39,18 @@ class SecurityMiddleware:
             app=app,
             key_func=get_remote_address,
             default_limits=["200 per day", "50 per hour"],
-            storage_uri="redis://localhost:6379"
+            storage_uri="redis://localhost:6379",
         )
 
     def before_request(self):
         """Execute before each request"""
         # Validate API key for  external requests
-        if request.path.startswith('/api/external'):
+        if request.path.startswith("/api/external"):
             self._validate_api_key()
 
         # Validate request signature for critical operations
-        if request.method in ['POST', 'PUT', 'DELETE']:
-            if request.path.startswith('/api/critical'):
+        if request.method in ["POST", "PUT", "DELETE"]:
+            if request.path.startswith("/api/critical"):
                 self._validate_request_signature()
 
         # Track request for audit
@@ -54,20 +59,17 @@ class SecurityMiddleware:
     def after_request(self, response):
         """Add security headers to response"""
         # Add CSP header
-        csp_string = '; '.join([
-            f"{key} {' '.join(values)}"
-            for key, values in CSP_POLICY.items()
-        ])
-        response.headers['Content-Security-Policy'] = csp_string
+        csp_string = "; ".join([f"{key} {' '.join(values)}" for key, values in CSP_POLICY.items()])
+        response.headers["Content-Security-Policy"] = csp_string
 
         # Add other security headers
         for header, value in SECURITY_HEADERS.items():
             response.headers[header] = value
 
         # Add request timing for monitoring
-        if hasattr(g, 'request_start_time'):
+        if hasattr(g, "request_start_time"):
             duration = time.time() - g.request_start_time
-            response.headers['X-Response-Time'] = f"{duration:.3f}s"
+            response.headers["X-Response-Time"] = f"{duration:.3f}s"
 
         return response
 
@@ -87,13 +89,14 @@ class SecurityMiddleware:
         # TODO: Implement actual validation against database/cache
         # This is a placeholder
         from flask import current_app
-        valid_keys = current_app.config.get('VALID_API_KEYS', [])
+
+        valid_keys = current_app.config.get("VALID_API_KEYS", [])
         return api_key in valid_keys
 
     def _validate_request_signature(self):
         """Validate HMAC signature for critical requests"""
-        signature = request.headers.get('X-Signature')
-        timestamp = request.headers.get('X-Timestamp')
+        signature = request.headers.get("X-Signature")
+        timestamp = request.headers.get("X-Timestamp")
 
         if not signature or not timestamp:
             abort(401, description="Request signature required")
@@ -116,7 +119,8 @@ class SecurityMiddleware:
     def _generate_signature(self, payload: bytes, timestamp: str) -> str:
         """Generate HMAC signature for request"""
         from flask import current_app
-        secret = current_app.config.get('API_SECRET_KEY', '').encode()
+
+        secret = current_app.config.get("API_SECRET_KEY", "").encode()
 
         message = timestamp.encode() + payload
         signature = hmac.new(secret, message, hashlib.sha256).hexdigest()
@@ -125,25 +129,41 @@ class SecurityMiddleware:
 
 def require_api_key(f):
     """Decorator to require API key for endpoint"""
+
     @wraps(f)
     def decorated(*args, **kwargs):
+        """decorated function.
+
+        Returns:
+            Response data
+        """
+
         api_key = request.headers.get(API_KEY_HEADER)
         if not api_key:
             abort(401, description="API key required")
         # Validate API key here
         return f(*args, **kwargs)
+
     return decorated
 
 
 def require_signature(f):
     """Decorator to require request signature"""
+
     @wraps(f)
     def decorated(*args, **kwargs):
-        signature = request.headers.get('X-Signature')
+        """decorated function.
+
+        Returns:
+            Response data
+        """
+
+        signature = request.headers.get("X-Signature")
         if not signature:
             abort(401, description="Request signature required")
         # Validate signature here
         return f(*args, **kwargs)
+
     return decorated
 
 

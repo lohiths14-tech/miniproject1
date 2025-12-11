@@ -15,6 +15,9 @@ import time
 BASE_URL = "http://localhost:5000"
 HEADLESS = True  # Set to False to see browser
 
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+
 @pytest.fixture(scope="module")
 def browser():
     """Set up browser for testing"""
@@ -22,14 +25,6 @@ def browser():
     if HEADLESS:
         chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-
-    driver = webdriver.Chrome(options=chrome_options)
-    driver.implicitly_wait(10)
-    yield driver
-    driver.quit()
-
-
 class TestStudentWorkflow:
     """Test complete student submission workflow"""
 

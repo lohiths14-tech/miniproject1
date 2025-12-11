@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # Test MongoDB database
+  test-mongo:
+    image: mongo:7.0
+    ports:
+      - "27018:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=test_ai_grading
+    volumes:
+      - test-mongo-data:/data/db
+    networks:
+      - test-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    command: mongod --quiet --logpath /dev/null
+
+  # Test Redis cache
+  test-redis:
+    image: redis:7.2-alpine
+    ports:
+      - "6380:6379"
+    networks:
+      - test-network
+    command: redis-server --save "" --appendonly no --loglevel warning
+
+  # Test Celery worker
+  test-celery:
+    build: .
+    command: celery -A tasks.celery_tasks worker --loglevel=error
+    environment:
+      - MONGODB_URI=mongodb://test-mongo:27017/test_ai_grading
+      - REDIS_URL=redis://test-redis:6379/0
+      - CELERY_BROKER_URL=redis://test-redis:6379/0
+      - FLASK_ENV=testing
+    depends_on:
+      test-mongo:
+        condition: service_healthy
+      test-redis:
+        condition: service_started
+    networks:
+      - test-network
+
+volumes:
+  test-mongo-data:
+
+networks:
+  test-network:
+    driver: bridge

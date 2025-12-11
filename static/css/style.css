@@ -2,27 +2,52 @@
 
 /* Global Styles */
 :root {
+    /* Light Theme Variables (Default) */
     --primary-color: #007bff;
     --secondary-color: #6c757d;
     --success-color: #28a745;
     --danger-color: #dc3545;
     --warning-color: #ffc107;
     --info-color: #17a2b8;
-    --light-color: #f8f9fa;
-    --dark-color: #343a40;
+
+    --bg-body: #f8f9fa;
+    --bg-card: #ffffff;
+    --bg-sidebar: #ffffff;
+    --bg-input: #ffffff;
+
+    --text-main: #333333;
+    --text-muted: #6c757d;
+    --text-light: #f8f9fa;
+
+    --border-color: #e9ecef;
     --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     --border-radius: 0.5rem;
 }
 
+[data-theme="dark"] {
+    --bg-body: #121212;
+    --bg-card: #1e1e1e;
+    --bg-sidebar: #1e1e1e;
+    --bg-input: #2d2d2d;
+
+    --text-main: #e0e0e0;
+    --text-muted: #a0a0a0;
+    --text-light: #e0e0e0;
+
+    --border-color: #333333;
+    --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+}
+
 * {
     box-sizing: border-box;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 body {
-    background-color: #f8f9fa;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-body);
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    color: #333 !important;
+    color: var(--text-main) !important;
 }
 
 /* Text Visibility Fixes */
@@ -48,18 +73,24 @@ body {
     color: #555 !important;
 }
 
-.bg-light h1, .bg-light h2, .bg-light h3, .bg-light h4, .bg-light h5, .bg-light h6 {
+.bg-light h1,
+.bg-light h2,
+.bg-light h3,
+.bg-light h4,
+.bg-light h5,
+.bg-light h6 {
     color: #333 !important;
 }
 
-.bg-light p, .bg-light li {
+.bg-light p,
+.bg-light li {
     color: #555 !important;
 }
 
 /* White text with better visibility */
 .text-white {
     color: #ffffff !important;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* Navigation Styles */
@@ -83,8 +114,8 @@ body {
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: white;
-    color: #333;
+    background-color: var(--bg-card);
+    color: var(--text-main);
 }
 
 .card:hover {
@@ -99,22 +130,28 @@ body {
 }
 
 .card-body {
+    color: var(--text-main);
+}
+
+.card-body h1,
+.card-body h2,
+.card-body h3,
+.card-body h4,
+.card-body h5,
+.card-body h6 {
     color: #333;
 }
 
-.card-body h1, .card-body h2, .card-body h3, .card-body h4, .card-body h5, .card-body h6 {
-    color: #333;
-}
-
-.card-body p, .card-body li {
+.card-body p,
+.card-body li {
     color: #555;
 }
 
 /* Role Card Specific Styles */
 .role-card {
-    background: white !important;
-    color: #333 !important;
-    border: 2px solid #e9ecef;
+    background: var(--bg-card) !important;
+    color: var(--text-main) !important;
+    border: 2px solid var(--border-color);
     transition: all 0.3s ease;
 }
 
@@ -184,7 +221,9 @@ body {
 /* Form Styles */
 .form-control {
     border-radius: var(--border-radius);
-    border: 2px solid #e9ecef;
+    border: 2px solid var(--border-color);
+    background-color: var(--bg-input);
+    color: var(--text-main);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -216,24 +255,30 @@ body {
 
 /* Dashboard Styles */
 .dashboard-card {
-    background: white;
+    background: var(--bg-card);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     padding: 1.5rem;
     margin-bottom: 1.5rem;
     transition: transform 0.3s ease;
-    color: #333;
+    color: var(--text-main);
 }
 
 .dashboard-card:hover {
     transform: translateY(-3px);
 }
 
-.dashboard-card h1, .dashboard-card h2, .dashboard-card h3, .dashboard-card h4, .dashboard-card h5, .dashboard-card h6 {
+.dashboard-card h1,
+.dashboard-card h2,
+.dashboard-card h3,
+.dashboard-card h4,
+.dashboard-card h5,
+.dashboard-card h6 {
     color: #333;
 }
 
-.dashboard-card p, .dashboard-card li {
+.dashboard-card p,
+.dashboard-card li {
     color: #555;
 }
 
@@ -243,8 +288,8 @@ body {
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     transition: transform 0.3s ease;
-    background: white;
-    color: #333;
+    background: var(--bg-card);
+    color: var(--text-main);
 }
 
 .stat-card:hover {
@@ -427,7 +472,7 @@ body {
 
 /* Sidebar Styles */
 .sidebar {
-    background: white;
+    background: var(--bg-sidebar);
     box-shadow: var(--shadow);
     border-radius: var(--border-radius);
     padding: 1.5rem;
@@ -486,19 +531,19 @@ footer {
     .hero-section {
         text-align: center;
     }
-    
+
     .stat-card {
         margin-bottom: 1rem;
     }
-    
+
     .dashboard-card {
         margin-bottom: 1rem;
     }
-    
+
     .code-editor {
         min-height: 300px;
     }
-    
+
     .table-responsive {
         font-size: 0.875rem;
     }
@@ -514,6 +559,7 @@ footer {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -529,6 +575,7 @@ footer {
         opacity: 0;
         transform: translateX(-30px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -606,36 +653,39 @@ footer {
     color: #fff;
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #1a1a1a;
-        color: #ffffff;
+/* Micro-animations */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
     }
-    
-    .card {
-        background-color: #2d2d2d;
-        color: #ffffff;
+
+    50% {
+        transform: translateY(-5px);
     }
-    
-    .table {
-        background-color: #2d2d2d;
-        color: #ffffff;
+
+    100% {
+        transform: translateY(0px);
     }
-    
-    .sidebar {
-        background-color: #2d2d2d;
+}
+
+.animate-float:hover {
+    animation: float 2s ease-in-out infinite;
+}
+
+.btn-pulse:hover {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
     }
-    
-    .form-control {
-        background-color: #3d3d3d;
-        border-color: #555;
-        color: #ffffff;
+
+    50% {
+        transform: scale(1.05);
     }
-    
-    .form-control:focus {
-        background-color: #3d3d3d;
-        border-color: var(--primary-color);
-        color: #ffffff;
+
+    100% {
+        transform: scale(1);
     }
 }

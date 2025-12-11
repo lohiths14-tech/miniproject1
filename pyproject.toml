@@ -15,10 +15,10 @@ exclude = '''
 
 [tool.pylint.messages_control]
 disable = [
-    "C0111",  # missing-docstring
     "R0903",  # too-few-public-methods
     "C0103",  # invalid-name
     "R0913",  # too-many-arguments
+    "R0915",  # too-many-statements
 ]
 
 [tool.pylint.format]

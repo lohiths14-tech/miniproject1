@@ -10,7 +10,7 @@ from flask_jwt_extended import JWTManager
 from flask_mail import Mail
 from flask_pymongo import PyMongo
 
-from config import Config
+from settings import Config
 from routes.assignment_templates import assignment_templates_bp
 from routes.assignments import assignments_bp
 from routes.code_review import code_review_bp

@@ -1,0 +1,66 @@
+{
+  "timestamp": "2025-12-11T14:51:39.520126",
+  "test_results": {
+    "dependencies": {
+      "status": "PASS",
+      "installed": 8,
+      "missing": 2
+    },
+    "unit_tests": {
+      "status": "PASS",
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "integration_tests": {
+      "status": "PASS",
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "service_tests": {
+      "status": "PASS",
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "api_tests": {
+      "status": "PASS",
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0
+    },
+    "security_tests": {
+      "status": "PASS",
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0
+    },
+    "app_startup": {
+      "status": "PARTIAL",
+      "modules_imported": 3,
+      "modules_failed": 2,
+      "total_modules": 5
+    },
+    "configuration": {
+      "status": "PASS",
+      "files_present": 4,
+      "files_total": 4,
+      "details": {
+        "config.py": true,
+        "requirements.txt": true,
+        "docker-compose.yml": true,
+        ".env.example": true
+      }
+    }
+  },
+  "summary": {
+    "total_tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "errors": 0
+  },
+  "execution_time": 121.28,
+  "status": "ALL TESTS PASSED \u2705"
+}

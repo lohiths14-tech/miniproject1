@@ -1,10 +1,12 @@
 """
 Redis caching service for performance optimization
 """
-import redis
 import json
 from functools import wraps
-from config import Config
+
+import redis
+
+from settings import Config
 
 
 class CacheService:
@@ -13,14 +15,14 @@ class CacheService:
     def __init__(self):
         try:
             self.redis_client = redis.Redis(
-                host=Config.REDIS_HOST if hasattr(Config, 'REDIS_HOST') else 'localhost',
-                port=Config.REDIS_PORT if hasattr(Config, 'REDIS_PORT') else 6379,
+                host=Config.REDIS_HOST if hasattr(Config, "REDIS_HOST") else "localhost",
+                port=Config.REDIS_PORT if hasattr(Config, "REDIS_PORT") else 6379,
                 db=0,
-                decode_responses=True
+                decode_responses=True,
             )
             self.redis_client.ping()
             self.enabled = True
-        except Exception as e:
+        except (ValueError, KeyError, AttributeError, redis.ConnectionError, redis.RedisError, Exception) as e:
             print(f"Redis not available: {e}. Caching disabled.")
             self.enabled = False
             self.redis_client = None
@@ -34,7 +36,7 @@ class CacheService:
             serialized = json.dumps(value)
             self.redis_client.setex(key, expiration, serialized)
             return True
-        except Exception as e:
+        except (ValueError, KeyError, AttributeError, redis.ConnectionError, redis.RedisError, Exception) as e:
             print(f"Cache set error: {e}")
             return False
 
@@ -48,7 +50,7 @@ class CacheService:
             if cached:
                 return json.loads(cached)
             return None
-        except Exception as e:
+        except (ValueError, KeyError, AttributeError, redis.ConnectionError, redis.RedisError, Exception) as e:
             print(f"Cache get error: {e}")
             return None
 
@@ -60,7 +62,7 @@ class CacheService:
         try:
             self.redis_client.delete(key)
             return True
-        except Exception as e:
+        except (ValueError, KeyError, AttributeError, redis.ConnectionError, redis.RedisError, Exception) as e:
             print(f"Cache delete error: {e}")
             return False
 
@@ -74,13 +76,13 @@ class CacheService:
             if keys:
                 self.redis_client.delete(*keys)
             return True
-        except Exception as e:
+        except (ValueError, KeyError, AttributeError, redis.ConnectionError, redis.RedisError, Exception) as e:
             print(f"Cache pattern delete error: {e}")
             return False
 
 
 # Decorator for caching function results
-def cached(expiration=3600, key_prefix=''):
+def cached(expiration=3600, key_prefix=""):
     """
     Decorator to cache function results
 
@@ -89,6 +91,7 @@ def cached(expiration=3600, key_prefix=''):
         def get_user_profile(user_id):
             return expensive_operation(user_id)
     """
+
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -109,7 +112,9 @@ def cached(expiration=3600, key_prefix=''):
             cache.cache_result(cache_key, result, expiration)
 
             return result
+
         return wrapper
+
     return decorator
 
 
