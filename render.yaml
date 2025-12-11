@@ -2,26 +2,39 @@ services:
   - type: web
     name: ai-grading-system
     env: python
+    region: oregon
+    plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn "app:create_app()" --bind 0.0.0.0:$PORT
+    startCommand: gunicorn "app:create_app()" --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
       - key: FLASK_ENV
         value: production
+      - key: PORT
+        value: 10000
       - key: SECRET_KEY
         generateValue: true
       - key: JWT_SECRET_KEY
         generateValue: true
       - key: MONGODB_URI
         sync: false
+      - key: OPENAI_API_KEY
+        sync: false
       - key: REDIS_URL
         fromService:
           type: redis
           name: ai-grading-redis
           property: connectionString
+      - key: SESSION_COOKIE_SECURE
+        value: True
+      - key: SESSION_COOKIE_HTTPONLY
+        value: True
+      - key: SESSION_COOKIE_SAMESITE
+        value: Lax
 
   - type: redis
     name: ai-grading-redis
-    ipAllowList: [] # Only allow internal connections
-    plan: free # Use free tier if available, otherwise starter
+    ipAllowList: []
+    plan: free
