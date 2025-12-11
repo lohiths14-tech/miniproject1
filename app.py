@@ -136,7 +136,7 @@ def create_app():
             get_remote_address,
             app=app,
             default_limits=["200 per day", "50 per hour"],
-            storage_uri=app.config.get("CELERY_BROKER_URL", "memory://"),
+            storage_uri=app.config.get("REDIS_URL", "memory://"),
         )
         app.limiter = limiter
         app.logger.info("✅ Rate limiting enabled")
