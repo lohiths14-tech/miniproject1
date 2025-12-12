@@ -6,9 +6,33 @@ from datetime import datetime
 USERS_DB = {}
 
 def create_test_users():
-    """Initialize empty users database - users can register through UI"""
-    # Production system - users register through the signup form
-    pass
+    """Initialize test users for development"""
+    # Create default lecturer account
+    register_user(
+        "lecturer@example.com",
+        "Test Lecturer",
+        "password123",
+        "lecturer",
+        lecturer_id="LEC001"
+    )
+
+    # Create default student account
+    register_user(
+        "student@example.com",
+        "Test Student",
+        "password123",
+        "student",
+        usn="4PM24AI001"
+    )
+
+    # Create default admin account
+    register_user(
+        "admin@example.com",
+        "Admin User",
+        "admin123",
+        "lecturer",
+        lecturer_id="ADMIN001"
+    )
 
 def authenticate_user(email, password):
     """Authenticate user with email and password"""
@@ -22,7 +46,7 @@ def register_user(email, username, password, role, **kwargs):
     email = email.lower()
     if email in USERS_DB:
         return None, "User already exists"
-    
+
     user_data = {
         'email': email,
         'username': username,
@@ -31,12 +55,12 @@ def register_user(email, username, password, role, **kwargs):
         'created_at': datetime.utcnow(),
         'is_active': True
     }
-    
+
     if role == 'student':
         user_data['usn'] = kwargs.get('usn', '')
     else:
         user_data['lecturer_id'] = kwargs.get('lecturer_id', '')
-    
+
     USERS_DB[email] = user_data
     return user_data, None
 
