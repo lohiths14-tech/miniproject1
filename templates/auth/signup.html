@@ -274,6 +274,9 @@
         const roleParam = urlParams.get('role');
         if (roleParam) {
             $(`input[name="role"][value="${roleParam}"]`).prop('checked', true).trigger('change');
+        } else {
+            // Trigger change event on page load to set initial state
+            $('input[name="role"]:checked').trigger('change');
         }
 
         // Toggle password visibility
